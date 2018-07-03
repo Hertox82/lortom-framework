@@ -1,0 +1,14 @@
+{
+    "name": "hadeluca/lortom-framework",
+    "description": "This is library for Lortom CMS",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hernan Ariel De Luca",
+            "email": "hadeluca@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}

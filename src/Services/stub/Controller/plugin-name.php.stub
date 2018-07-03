@@ -1,0 +1,11 @@
+<?php
+
+namespace #namespace#;
+
+use App\Http\Controllers\LortomController as Controller;
+use Illuminate\Http\Request;
+
+class #name#Controller extends Controller
+{
+
+}

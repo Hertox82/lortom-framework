@@ -100,7 +100,7 @@ class LortomUser extends Model
 
     public function roles()
     {
-        $this->roles =  $this->belongsToMany('App\LortomRole','lt_users_roles','idUser','idRole')->get();
+        $this->roles =  $this->belongsToMany('LTFramework\LortomRole','lt_users_roles','idUser','idRole')->get();
 
         return $this;
     }

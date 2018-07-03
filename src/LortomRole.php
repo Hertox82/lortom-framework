@@ -18,7 +18,7 @@ class LortomRole extends Model
 
     public function permissions()
     {
-        $this->permissions = $this->belongsToMany('App\LortomPermission','lt_roles_permissions','idRole','idPermission')->get();
+        $this->permissions = $this->belongsToMany('LTFramework\LortomPermission','lt_roles_permissions','idRole','idPermission')->get();
 
         return $this;
     }

@@ -15,5 +15,4 @@ class LortomPermission extends Model
     protected $table = 'lt_permissions';
 
 
-
 }

@@ -15,5 +15,7 @@
       }
     },
     "minimum-stability": "dev",
-    "require": {}
+    "require": {
+        "illuminate/database":"5.5.*"
+    }
 }

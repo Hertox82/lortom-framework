@@ -9,6 +9,11 @@
             "email": "hadeluca@gmail.com"
         }
     ],
+    "autoload": {
+      "psr-4": {
+          "LTFramework\\":"src/"
+      }
+    },
     "minimum-stability": "dev",
     "require": {}
 }

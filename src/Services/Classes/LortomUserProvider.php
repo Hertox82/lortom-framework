@@ -132,7 +132,7 @@ class LortomUserProvider
 
     private function getNameClass()
     {
-        return "App\\Services\\Classes\\LortomUserProvider";
+        return "LTFramework\\Services\\Classes\\LortomUserProvider";
     }
 
 

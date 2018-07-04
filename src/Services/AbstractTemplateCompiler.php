@@ -8,7 +8,7 @@
 namespace LTFramework\Services;
 
 
-use App\Services\Traits\ActionCommand;
+use LTFramework\Services\Traits\ActionCommand;
 use File;
 
 abstract class AbstractTemplateCompiler extends BaseTemplate

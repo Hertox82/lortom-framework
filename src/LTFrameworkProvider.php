@@ -14,7 +14,7 @@ class LTFrameworkProvider extends ServiceProvider {
 
     protected $listOfCommands = [];
 
-    protected $namespace = 'LTFramework\Controller';
+    protected $namespace = 'LTFramework\Controllers';
 
     public function boot() {
 
@@ -53,8 +53,38 @@ class LTFrameworkProvider extends ServiceProvider {
     }
 
 
+    /**
+     * This metho booting routes for web and api
+     */
     protected function bootRouting() {
 
+        if(!!$this->app->routesAreCached()) {
+
+            $this->mapWeb();
+
+            $this->mapApi();
+        }
+    }
+
+    /**
+     * this method map web.php
+     */
+    protected function mapWeb() {
+
+        Route::middleware('web')
+            ->namespace($this->namespace)
+            ->group(__DIR__.'routes/web.php');
+    }
+
+    /**
+     * this method map api.php
+     */
+    protected function mapApi() {
+
+        Route::prefix('api')
+            ->middleware('api')
+            ->namespace($this->namespace)
+            ->group(__DIR__.'/routes/api.php');
     }
 
     /**

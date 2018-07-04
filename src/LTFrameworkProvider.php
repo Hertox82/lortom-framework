@@ -8,6 +8,7 @@
 namespace LTFramework;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Route;
 
 class LTFrameworkProvider extends ServiceProvider {
 
@@ -58,7 +59,7 @@ class LTFrameworkProvider extends ServiceProvider {
      */
     protected function bootRouting() {
 
-        if(!!$this->app->routesAreCached()) {
+        if(!$this->app->routesAreCached()) {
 
             $this->mapWeb();
 
@@ -73,7 +74,7 @@ class LTFrameworkProvider extends ServiceProvider {
 
         Route::middleware('web')
             ->namespace($this->namespace)
-            ->group(__DIR__.'routes/web.php');
+            ->group(__DIR__.'/routes/web.php');
     }
 
     /**

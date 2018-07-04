@@ -6,7 +6,10 @@
  */
 namespace LTFramework\Controllers\Backend;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use LTFramework\LortomPermission;
 use LTFramework\LortomUser;
 use LTFramework\Services\Classes\LortomAuth;
@@ -14,8 +17,9 @@ use Illuminate\Http\Request;
 use Cookie;
 use Session;
 
-class BackendController extends Controller
+class BackendController extends BaseController
 {
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     protected $auth;
 

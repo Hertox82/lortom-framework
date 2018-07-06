@@ -77,4 +77,11 @@ return [
             return new \LTFramework\Services\LortomSeeder($app['lt.seeder']);
         }
     ],
+    [
+        'method'      => 'singleton',
+        'abstract'    => 'lt-setup.compiler',
+        'closure'     => function($app){
+            return new \LTFramework\Services\SetupCompiler();
+        }
+    ],
 ];

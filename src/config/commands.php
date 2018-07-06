@@ -90,5 +90,12 @@ return [
         'closure'     => function($app){
             return new \LTFramework\Commands\UpdatePermission($app['lt-plugin.update.compiler']);
         }
+    ],
+    [
+        'method'      => 'bind',
+        'abstract'    => 'lt-setup::init',
+        'closure'     => function($app){
+            return new \LTFramework\Commands\Setup($app['lt-setup.compiler']);
+        }
     ]
 ];

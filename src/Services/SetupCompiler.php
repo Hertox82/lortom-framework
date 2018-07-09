@@ -79,6 +79,8 @@ class SetupCompiler {
 
         $this->writeEnvFile();
 
+        $this->saveOnConfig();
+
     }
 
     protected function loadEnv() {
@@ -109,6 +111,51 @@ class SetupCompiler {
         $raw = implode("\n", $newLines);
 
         $this->createFile(base_path().'/.env',$raw);
+    }
+
+    protected function saveOnConfig() {
+        $function = ucfirst($this->ENV['DB_CONNECTION']);
+
+        $method = "save{$function}Config";
+
+        $this->$method();
+
+        foreach ($this->ENV as $key => $value) {
+            $_ENV[$key] = $value;
+        }
+    }
+
+    protected function saveMysqlConfig() {
+        config(['database.default' => $this->ENV['DB_CONNECTION']]);
+        config(['database.connections.mysql.host' => $this->ENV['DB_HOST']]);
+        config(['database.connections.mysql.port' => $this->ENV['DB_PORT']]);
+        config(['database.connections.mysql.database' => $this->ENV['DB_DATABASE']]);
+        config(['database.connections.mysql.username' => $this->ENV['DB_USERNAME']]);
+        config(['database.connections.mysql.password' => $this->ENV['DB_PASSWORD']]);
+    }
+
+    protected function saveSqliteConfig() {
+        config(['database.default' => $this->ENV['DB_CONNECTION']]);
+        config(['database.connections.sqlite.database' => $this->ENV['DB_DATABASE']]);
+    }
+
+    protected function savePgsqlConfig() {
+
+        config(['database.default' => $this->ENV['DB_CONNECTION']]);
+        config(['database.connections.pgsql.host' => $this->ENV['DB_HOST']]);
+        config(['database.connections.pgsql.port' => $this->ENV['DB_PORT']]);
+        config(['database.connections.pgsql.database' => $this->ENV['DB_DATABASE']]);
+        config(['database.connections.pgsql.username' => $this->ENV['DB_USERNAME']]);
+        config(['database.connections.pgsql.password' => $this->ENV['DB_PASSWORD']]);
+    }
+
+    protected function saveSqlsrvConfig() {
+        config(['database.default' => $this->ENV['DB_CONNECTION']]);
+        config(['database.connections.sqlsrv.host' => $this->ENV['DB_HOST']]);
+        config(['database.connections.sqlsrv.port' => $this->ENV['DB_PORT']]);
+        config(['database.connections.sqlsrv.database' => $this->ENV['DB_DATABASE']]);
+        config(['database.connections.sqlsrv.username' => $this->ENV['DB_USERNAME']]);
+        config(['database.connections.sqlsrv.password' => $this->ENV['DB_PASSWORD']]);
     }
 
     /**

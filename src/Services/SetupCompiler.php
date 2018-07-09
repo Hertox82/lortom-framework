@@ -52,9 +52,9 @@ class SetupCompiler {
      */
     public function copyFiles() {
 
-        $customAction = File::get(__DIR__.'../Services/stub/config/customAction.php.stub');
+        $customAction = File::get(__DIR__.'/../Services/stub/config/customAction.php.stub');
 
-        $dbexporter = File::get(__DIR__.'../Services/stub/config/dbexporter.php.stub');
+        $dbexporter = File::get(__DIR__.'/../Services/stub/config/dbexporter.php.stub');
 
         $pathCustom = config_path().'/customAction.php';
 

@@ -9,6 +9,7 @@ namespace LTFramework\Commands;
 
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 use LTFramework\Services\SetupCompiler;
 
 class Setup extends Command {
@@ -55,6 +56,10 @@ class Setup extends Command {
         $this->compiler->setupEnvFile($connection,$host,$port,$database,$DBusername,$DBpassword);
 
         $this->info('creating configuration files! ...');
+
+        $this->comment("making migration to Database {$database}");
+
+        Artisan::call('migrate');
 
         //create in config folder : customAction.php and dbexporter.php
         $this->compiler->copyFiles();

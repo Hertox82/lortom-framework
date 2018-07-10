@@ -7,6 +7,7 @@
 
 namespace LTFramework\Services;
 
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Facades\Artisan;
 use File;
 
@@ -25,10 +26,17 @@ class SetupCompiler {
 
     protected $ENV = [];
 
-    public function __construct()
+    /**
+     * @var DatabaseManager
+     */
+    protected $database;
+
+
+    public function __construct(DatabaseManager $db)
     {
         $this->node = $_ENV['NODE_JS'];
         $this->ltpm = $_ENV['LTPM'];
+        $this->database = $db;
     }
 
     /**
@@ -77,10 +85,9 @@ class SetupCompiler {
         $this->ENV['DB_USERNAME'] = $DbUsername;
         $this->ENV['DB_PASSWORD'] = $DbPassword;
 
-        $this->writeEnvFile();
-
         $this->saveOnConfig();
 
+        $this->writeEnvFile();
     }
 
     protected function loadEnv() {
@@ -123,6 +130,8 @@ class SetupCompiler {
         foreach ($this->ENV as $key => $value) {
             $_ENV[$key] = $value;
         }
+
+        $this->database->reconnect();
     }
 
     protected function saveMysqlConfig() {

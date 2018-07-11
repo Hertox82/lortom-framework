@@ -27,7 +27,7 @@ class PluginUpdateCompiler extends AbstractPlugin
         //check if config/plugins.php
         if(! File::exists(config_path('/plugins.php')))
         {
-            $this->insertConfigPlugin($this->basePluginPath);
+            $this->insertConfigPlugin($this->basePluginPath.'/');
 
 
         } else {

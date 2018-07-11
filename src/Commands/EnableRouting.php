@@ -39,7 +39,7 @@ class EnableRouting extends Command
 
         if(!file_exists($path = config_path('plugins.php')))
         {
-            $this->error("file plugins.php in config/ not exist,\n please, install plugins.php using this command: lortom-plugins:create_config");
+            $this->error("file plugins.php in config/ not exist,\n please, install plugins.php using this command: lt-plugin:create");
         }
         else {
             $ArrayConfig = require $path;

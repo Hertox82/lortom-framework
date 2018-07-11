@@ -73,7 +73,7 @@ class UpdatePermission extends Command
         $name = ucwords($name);
         $name = str_replace(' ', '', $name);
 
-        $pathPlugin = __DIR__ . '/../../../angular-backend/src/plugins/';
+        $pathPlugin = base_path().'/angular-backend/src/plugins/';
 
         if (File::exists($pathPlugin . $vendor)) {
             $pathVendor = $pathPlugin . $vendor . '/';

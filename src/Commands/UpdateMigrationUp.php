@@ -33,11 +33,12 @@ class UpdateMigrationUp extends Command
     public function handle()
     {
         $VendorName = $this->option('vendor-name');
+        $silent = $this->option('silent');
 
         $vendor = '';
         $name = '';
 
-        if(is_null($VendorName))
+        if(is_null($VendorName) and !$silent)
         {
             $vendor = $this->ask('Vendor Name?');
             $name   = $this->ask('Name of Plugin?');
@@ -58,37 +59,43 @@ class UpdateMigrationUp extends Command
             }
         }
 
-        if($this->confirm("This is the Vendor = {$vendor}, the Name= {$name} of plugin that you choice to UPDATE, Do you wish to continue?"))
+        if(!$silent) {
+            if ($this->confirm("This is the Vendor = {$vendor}, the Name= {$name} of plugin that you choice to migrate up, Do you wish to continue?")) {
+                $this->DoSomething($vendor,$name);
+            }
+        }
+        else {
+            $this->DoSomething($vendor,$name);
+        }
+    }
+
+    protected function DoSomething($vendor,$name) {
+        $name = str_replace('-',' ',$name);
+        $name = ucwords($name);
+        $name = str_replace(' ','',$name);
+
+        $pathPlugin = base_path().'/angular-backend/src/plugins/';
+
+        if(File::exists($pathPlugin.$vendor))
         {
+            $pathVendor = $pathPlugin.$vendor.'/';
 
-            $name = str_replace('-',' ',$name);
-            $name = ucwords($name);
-            $name = str_replace(' ','',$name);
-
-            $pathPlugin = base_path().'/angular-backend/src/plugins/';
-
-            if(File::exists($pathPlugin.$vendor))
+            if(!File::exists($pathVendor.$name))
             {
-                $pathVendor = $pathPlugin.$vendor.'/';
-
-                if(!File::exists($pathVendor.$name))
-                {
-                    $this->info("This Plugin: {$name} in this Vendor: {$vendor} note exist! Please select other Name for your plugin");
-                    return;
-                }
-
-                //launch migration up
-                $this->compiler->setVendorName($vendor,$name)->migration('Up');
-
-
-                $this->info("\n");
-                $this->info("Ok! this Plugin : {$name} is updated!");
-            }
-            else
-            {
-                $this->info("this Vendor: {$vendor} not exist! Please select other Vendor for your plugin");
+                $this->info("This Plugin: {$name} in this Vendor: {$vendor} note exist! Please select other Name for your plugin");
+                return;
             }
 
+            //launch migration up
+            $this->compiler->setVendorName($vendor,$name)->migration('Up');
+
+
+            $this->info("\n");
+            $this->info("Ok! this Plugin : {$name} is migrated!");
+        }
+        else
+        {
+            $this->info("this Vendor: {$vendor} not exist! Please select other Vendor for your plugin");
         }
     }
 }

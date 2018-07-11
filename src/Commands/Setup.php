@@ -76,6 +76,16 @@ class Setup extends Command {
         $this->line('installed: Dashboard, Settings, Plugin and Website');
         $this->comment('fired migration for plugin');
 
+        Artisan::call('lt-gitignore:delete');
+
+        $this->info('Try to run npm install...');
+
+        sleep(3);
+
+        $command = "cd angular-backend && {$_ENV['NODE_JS']} {$_ENV['NPM']} install";
+
+        exec($command,$out);
+
         $this->info('Well done! Setup is finished, now build something of amazing!');
     }
 }

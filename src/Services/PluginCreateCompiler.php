@@ -267,19 +267,6 @@ class PluginCreateCompiler extends AbstractPlugin
     }
 
 
-
-    /**
-     * Function insert the configuration of Plugin into the file plugins.php
-     * @param $path
-     */
-    private function insertConfigPlugin($path)
-    {
-        $file = $path.'plugin_config.php';
-        //$plugin_load = require $file;
-        $pluginRawLoad = File::get($file);
-        $this->compilePlugin($pluginRawLoad);
-    }
-
     /**
      * This function insert into config/app.php into the providers, the ServiceProviders of Plugin
      * @param $basePath

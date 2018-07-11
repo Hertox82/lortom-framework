@@ -284,4 +284,16 @@ abstract class AbstractPlugin
     {
         $this->pluginConfigcompiler->migration($this->vendor,$this->name,'migration-down');
     }
+
+    /**
+     * Function insert the configuration of Plugin into the file plugins.php
+     * @param $path
+     */
+    protected function insertConfigPlugin($path)
+    {
+        $file = $path.'plugin_config.php';
+        //$plugin_load = require $file;
+        $pluginRawLoad = File::get($file);
+        $this->compilePlugin($pluginRawLoad);
+    }
 }

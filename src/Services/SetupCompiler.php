@@ -53,7 +53,7 @@ class SetupCompiler {
 
             Artisan::call('lt-plugin:update',['--vendor-name'=> $Plugin['vendor'].','.$Plugin['name'], '--silent' => true]);
 
-            Artisan::call('lt-migrate:up',['--vendor-name'=>$Plugin['vendor'].','.$Plugin['name'], '--silent' => true]);
+            Artisan::call('lt-migration:up',['--vendor-name'=>$Plugin['vendor'].','.$Plugin['name'], '--silent' => true]);
         }
     }
 

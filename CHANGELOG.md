@@ -1,6 +1,17 @@
 # Release Notes
 
 
+## 0.1.8 (2018-07-11)
+
+### Added
+
+- Add command `lt-migration:up` to pipeline of command `lt-setup:init`
+
+### Fixed
+
+- Fixed absolute path into a Lortom Commands
+
+
 ## 0.1.7 (2018-07-11)
 
 ## Added

@@ -92,7 +92,7 @@ class DeletePlugin extends Command
             $this->compiler->setVendorName($vendor, $name)->delete();
 
             //after all update the routing into the angular-backend/src/app/app.routing.ts
-            $this->callSilent('lortom-routing:enable');
+            $this->callSilent('lt-routing:enable');
 
             $this->info("\n");
             $this->info("Ok! this Plugin : {$name} no longer lives here");

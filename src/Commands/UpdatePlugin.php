@@ -92,17 +92,17 @@ class UpdatePlugin extends Command
 
             if (!$routing) {
                 //after all update the routing into the angular-backend/src/app/app.routing.ts
-                $this->callSilent('lortom-routing:enable');
+                $this->callSilent('lt-routing:enable');
 
             }
 
 
 
             if(!$silent) {
-                $this->call('lortom-permission:update', ['--vendor-name' => $vendor . ',' . $name]);
+                $this->call('lt-permission:update', ['--vendor-name' => $vendor . ',' . $name]);
             }
             else {
-                $this->callSilent('lortom-permission:update', ['--vendor-name' => $vendor . ',' . $name,'--silent' => true]);
+                $this->callSilent('lt-permission:update', ['--vendor-name' => $vendor . ',' . $name,'--silent' => true]);
             }
 
             $this->info("\n");

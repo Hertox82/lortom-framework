@@ -1,6 +1,13 @@
 # Release Notes
 
 
+## 0.1.9 (2018-07-12)
+
+### Changed
+
+- Changed the way of doing plugins migrations
+
+
 ## 0.1.8 (2018-07-11)
 
 ### Added

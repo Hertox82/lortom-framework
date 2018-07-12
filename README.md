@@ -1,10 +1,6 @@
 # Lortom-Framework
 
-Road to stable version `1.0.0`
-
-
-current stable version is: `0.1.6`
-
+This is the core of Lortom CMS
 
 
 ## CHANGE LOG

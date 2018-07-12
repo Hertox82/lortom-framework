@@ -7,6 +7,7 @@
 
 namespace LTFramework\Services;
 
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Facades\Artisan;
 use File;
 
@@ -25,10 +26,17 @@ class SetupCompiler {
 
     protected $ENV = [];
 
-    public function __construct()
+    /**
+     * @var DatabaseManager
+     */
+    protected $database;
+
+
+    public function __construct(DatabaseManager $db)
     {
         $this->node = $_ENV['NODE_JS'];
         $this->ltpm = $_ENV['LTPM'];
+        $this->database = $db;
     }
 
     /**
@@ -44,6 +52,8 @@ class SetupCompiler {
             exec($command,$output);
 
             Artisan::call('lt-plugin:update',['--vendor-name'=> $Plugin['vendor'].','.$Plugin['name'], '--silent' => true]);
+
+            Artisan::call('lt-migration:up',['--vendor-name'=>$Plugin['vendor'].','.$Plugin['name'], '--silent' => true]);
         }
     }
 
@@ -52,9 +62,9 @@ class SetupCompiler {
      */
     public function copyFiles() {
 
-        $customAction = File::get(__DIR__.'../Services/stub/config/customAction.php.stub');
+        $customAction = File::get(__DIR__.'/../Services/stub/config/customAction.php.stub');
 
-        $dbexporter = File::get(__DIR__.'../Services/stub/config/dbexporter.php.stub');
+        $dbexporter = File::get(__DIR__.'/../Services/stub/config/dbexporter.php.stub');
 
         $pathCustom = config_path().'/customAction.php';
 
@@ -77,8 +87,9 @@ class SetupCompiler {
         $this->ENV['DB_USERNAME'] = $DbUsername;
         $this->ENV['DB_PASSWORD'] = $DbPassword;
 
-        $this->writeEnvFile();
+        $this->saveOnConfig();
 
+        $this->writeEnvFile();
     }
 
     protected function loadEnv() {
@@ -109,6 +120,53 @@ class SetupCompiler {
         $raw = implode("\n", $newLines);
 
         $this->createFile(base_path().'/.env',$raw);
+    }
+
+    protected function saveOnConfig() {
+        $function = ucfirst($this->ENV['DB_CONNECTION']);
+
+        $method = "save{$function}Config";
+
+        $this->$method();
+
+        foreach ($this->ENV as $key => $value) {
+            $_ENV[$key] = $value;
+        }
+
+        $this->database->reconnect();
+    }
+
+    protected function saveMysqlConfig() {
+        config(['database.default' => $this->ENV['DB_CONNECTION']]);
+        config(['database.connections.mysql.host' => $this->ENV['DB_HOST']]);
+        config(['database.connections.mysql.port' => $this->ENV['DB_PORT']]);
+        config(['database.connections.mysql.database' => $this->ENV['DB_DATABASE']]);
+        config(['database.connections.mysql.username' => $this->ENV['DB_USERNAME']]);
+        config(['database.connections.mysql.password' => $this->ENV['DB_PASSWORD']]);
+    }
+
+    protected function saveSqliteConfig() {
+        config(['database.default' => $this->ENV['DB_CONNECTION']]);
+        config(['database.connections.sqlite.database' => $this->ENV['DB_DATABASE']]);
+    }
+
+    protected function savePgsqlConfig() {
+
+        config(['database.default' => $this->ENV['DB_CONNECTION']]);
+        config(['database.connections.pgsql.host' => $this->ENV['DB_HOST']]);
+        config(['database.connections.pgsql.port' => $this->ENV['DB_PORT']]);
+        config(['database.connections.pgsql.database' => $this->ENV['DB_DATABASE']]);
+        config(['database.connections.pgsql.username' => $this->ENV['DB_USERNAME']]);
+        config(['database.connections.pgsql.password' => $this->ENV['DB_PASSWORD']]);
+    }
+
+    protected function saveSqlsrvConfig() {
+        config(['database.default' => $this->ENV['DB_CONNECTION']]);
+        config(['database.connections.sqlsrv.host' => $this->ENV['DB_HOST']]);
+        config(['database.connections.sqlsrv.port' => $this->ENV['DB_PORT']]);
+        config(['database.connections.sqlsrv.database' => $this->ENV['DB_DATABASE']]);
+        config(['database.connections.sqlsrv.username' => $this->ENV['DB_USERNAME']]);
+        config(['database.connections.sqlsrv.password' => $this->ENV['DB_PASSWORD']]);
     }
 
     /**

@@ -79,10 +79,10 @@ class CreateTemplate extends Command
         $this->addTemplateToLtpm($vendor, $name, "0.1.0");
 
         //After this call Adding 4 plugin base
-        Artisan::call('lortom-template:add-plugin',['--vendor-name'=> $vendor.','.$name, '--silent' => true, '--name-plugin' => 'Hardel,Dashboard']);
-        Artisan::call('lortom-template:add-plugin',['--vendor-name'=> $vendor.','.$name, '--silent' => true, '--name-plugin' => 'Hardel,Settings']);
-        Artisan::call('lortom-template:add-plugin',['--vendor-name'=> $vendor.','.$name, '--silent' => true, '--name-plugin' => 'Hardel,Plugin']);
-        Artisan::call('lortom-template:add-plugin',['--vendor-name'=> $vendor.','.$name, '--silent' => true, '--name-plugin' => 'Hardel,Website']);
+        Artisan::call('lt-template:add-plugin',['--vendor-name'=> $vendor.','.$name, '--silent' => true, '--name-plugin' => 'Hardel,Dashboard']);
+        Artisan::call('lt-template:add-plugin',['--vendor-name'=> $vendor.','.$name, '--silent' => true, '--name-plugin' => 'Hardel,Settings']);
+        Artisan::call('lt-template:add-plugin',['--vendor-name'=> $vendor.','.$name, '--silent' => true, '--name-plugin' => 'Hardel,Plugin']);
+        Artisan::call('lt-template:add-plugin',['--vendor-name'=> $vendor.','.$name, '--silent' => true, '--name-plugin' => 'Hardel,Website']);
 
         $this->info('Please, be sure to make the composer dump-autoload!');
     }

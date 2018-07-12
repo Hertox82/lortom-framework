@@ -22,8 +22,19 @@ class PluginUpdateCompiler extends AbstractPlugin
         //retrive the content of file
         $plugSelfConfig = File::get($path);
 
-        //delete and update and compile the config/plugins.php
-        $this->compilePlugin($plugSelfConfig,true);
+        $i= -1;
+
+        //check if config/plugins.php
+        if(! File::exists(config_path('/plugins.php')))
+        {
+            $this->insertConfigPlugin($this->basePluginPath.'/');
+
+
+        } else {
+            //delete and update and compile the config/plugins.php
+            $this->compilePlugin($plugSelfConfig,true);
+
+        }
 
         //I need to know the index of Elements into the plugins in order to set the Service Provider
         $i = $this->getIndexFromPlugins();

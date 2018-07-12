@@ -97,5 +97,12 @@ return [
         'closure'     => function($app){
             return new \LTFramework\Commands\Setup($app['lt-setup.compiler']);
         }
+    ],
+    [
+        'method'      => 'bind',
+        'abstract'    => 'lt-gitignore::delete',
+        'closure'     => function($app){
+            return new \LTFramework\Commands\DeleteGitignore();
+        }
     ]
 ];

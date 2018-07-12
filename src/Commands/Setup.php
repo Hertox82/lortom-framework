@@ -9,6 +9,7 @@ namespace LTFramework\Commands;
 
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 use LTFramework\Services\SetupCompiler;
 
 class Setup extends Command {
@@ -40,11 +41,11 @@ class Setup extends Command {
         $connection = $this->ask("Write me your connection (mysql | sqlite | sqlsrv | pgsql)","mysql");
         $host = $this->ask("Write me your host","127.0.0.1");
         $port = $this->ask("Write me your port", "3306");
-        $database = $this->ask("Write me your Database Name", "db_name");
-        $DBusername = $this->ask("Write me your DB Username","db_username");
-        $DBpassword = $this->ask("Write me your DB password", "db_password");
+        $database = $this->ask("Write me your Database Name", $_ENV['DB_DATABASE']);
+        $DBusername = $this->ask("Write me your DB Username",$_ENV['DB_USERNAME']);
+        $DBpassword = $this->ask("Write me your DB password", $_ENV['DB_PASSWORD']);
 
-        if($database === 'db_name' || $DBusername == 'db_username' || $DBpassword == 'db_password')
+        if($database === 'database_name' || $DBusername == 'database_username' || $DBpassword == 'database_password')
         {
             $this->error("Please, re-run the command and insert the DATABASE INFO");
             return;
@@ -55,6 +56,10 @@ class Setup extends Command {
         $this->compiler->setupEnvFile($connection,$host,$port,$database,$DBusername,$DBpassword);
 
         $this->info('creating configuration files! ...');
+
+        $this->comment("making migration to Database {$database}");
+
+        Artisan::call('migrate');
 
         //create in config folder : customAction.php and dbexporter.php
         $this->compiler->copyFiles();
@@ -70,6 +75,16 @@ class Setup extends Command {
 
         $this->line('installed: Dashboard, Settings, Plugin and Website');
         $this->comment('fired migration for plugin');
+
+        Artisan::call('lt-gitignore:delete');
+
+        $this->info('Try to run npm install...');
+
+        sleep(3);
+
+        $command = "cd angular-backend && {$_ENV['NODE_JS']} {$_ENV['NPM']} install";
+
+        exec($command,$out);
 
         $this->info('Well done! Setup is finished, now build something of amazing!');
     }

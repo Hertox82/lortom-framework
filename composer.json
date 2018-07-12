@@ -2,7 +2,6 @@
     "name": "hadeluca/lortom-framework",
     "description": "This is library for Lortom CMS",
     "type": "library",
-    "version": "0.1.2",
     "license": "MIT",
     "authors": [
         {
@@ -18,8 +17,12 @@
           "LTFramework\\":"src/"
       }
     },
-    "minimum-stability": "stable",
+
     "require": {
         "illuminate/database":"5.5.*"
-    }
+    },
+
+    "minimum-stability": "alpha",
+
+    "prefer-stable": true
 }

@@ -81,7 +81,7 @@ return [
         'method'      => 'singleton',
         'abstract'    => 'lt-setup.compiler',
         'closure'     => function($app){
-            return new \LTFramework\Services\SetupCompiler();
+            return new \LTFramework\Services\SetupCompiler($app['db']);
         }
     ],
 ];

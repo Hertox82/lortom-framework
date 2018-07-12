@@ -41,9 +41,9 @@ class Setup extends Command {
         $connection = $this->ask("Write me your connection (mysql | sqlite | sqlsrv | pgsql)","mysql");
         $host = $this->ask("Write me your host","127.0.0.1");
         $port = $this->ask("Write me your port", "3306");
-        $database = $this->ask("Write me your Database Name", "db_name");
-        $DBusername = $this->ask("Write me your DB Username","db_username");
-        $DBpassword = $this->ask("Write me your DB password", "db_password");
+        $database = $this->ask("Write me your Database Name", $_ENV['DB_DATABASE']);
+        $DBusername = $this->ask("Write me your DB Username",$_ENV['DB_USERNAME']);
+        $DBpassword = $this->ask("Write me your DB password", $_ENV['DB_PASSWORD']);
 
         if($database === 'db_name' || $DBusername == 'db_username' || $DBpassword == 'db_password')
         {

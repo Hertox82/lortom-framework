@@ -9,6 +9,7 @@ namespace LTFramework\Services;
 
 use File;
 use DB;
+use Illuminate\Support\Facades\Schema;
 
 class PluginsConfigCompiler
 {
@@ -219,6 +220,18 @@ class PluginsConfigCompiler
 
         $function = $listReduced[$kind];
 
-        $function();
+        if(!is_array($function))
+            $function(Schema::class);
+        else {
+            if($kind === 'migration-up') {
+                foreach ($function as $method) {
+                    $method(Schema::class);
+                }
+            } else {
+                foreach (array_reverse($function) as $method) {
+                    $method(Schema::class);
+                }
+            }
+        }
     }
 }

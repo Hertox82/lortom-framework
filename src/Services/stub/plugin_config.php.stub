@@ -9,10 +9,10 @@
                 'icon'              => '',
                 'serviceProvider'   => #Namespaceclass#::class,
                 'subMenu'           => [],
-                'migration-up'      => function(){
+                'migration-up'      => function($Schema){
                     //here migration to create tables and columns
                 },
-                'migration-down'    => function(){
+                'migration-down'    => function($Schema){
                     //here migration to delete tables
                 },
                 'permission'        => '#Vendor#.#Name#'

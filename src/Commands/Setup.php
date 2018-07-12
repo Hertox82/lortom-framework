@@ -45,7 +45,7 @@ class Setup extends Command {
         $DBusername = $this->ask("Write me your DB Username",$_ENV['DB_USERNAME']);
         $DBpassword = $this->ask("Write me your DB password", $_ENV['DB_PASSWORD']);
 
-        if($database === 'db_name' || $DBusername == 'db_username' || $DBpassword == 'db_password')
+        if($database === 'database_name' || $DBusername == 'database_username' || $DBpassword == 'database_password')
         {
             $this->error("Please, re-run the command and insert the DATABASE INFO");
             return;

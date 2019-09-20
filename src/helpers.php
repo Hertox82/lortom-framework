@@ -76,3 +76,117 @@ if(! function_exists('getObjectFromValueKey')) {
         return null;
     }
 }
+
+if(! function_exists('build_iteration_order_array')) {
+
+    function build_iteration_order_array($arrDati, $idFieldName, $iterationFieldName){
+
+        // Inizializza
+        $arrReturn = array();
+        $idPadreAttuale = 0;
+        $countSicurezza = 0;
+
+        // Attiva l'iterazione
+        $arrReturn = splice($arrDati, $idFieldName, $iterationFieldName, $idPadreAttuale);
+
+        // Restituzione
+        return $arrReturn;
+    }
+}
+
+if(!function_exists("splice"))
+{
+    function splice($arrDati, $idFieldName, $iterationFieldName, $idPadreAttuale, $arrSpliced = array())
+    {
+        // Scansione array dei nodi
+        foreach($arrDati as $nodo)
+        {
+            if($nodo[$iterationFieldName] == $idPadreAttuale)
+            {
+                $arrIterSpliced = splice($arrDati, $idFieldName, $iterationFieldName, $nodo[$idFieldName]);
+                $arrSpliced[] = array(
+                    "arrDati" => $nodo,
+                    "arrChild" => $arrIterSpliced
+                );
+            }
+        }
+
+        // Restituzione
+        return $arrSpliced;
+    }
+}
+
+if(!function_exists("addCategory"))
+{
+    function addCategory($arrCategorie, $arrReturn, $lvl = 0)
+    {
+        foreach($arrCategorie as $categoria)
+        {
+            $categoria_id = $categoria['arrDati']['id'];
+            $categoria_label = "&nbsp;&nbsp;&nbsp;&nbsp;" . $categoria['arrDati']['name'];
+            for($i=0; $i<$lvl; $i++) $categoria_label = "&nbsp;&nbsp;&nbsp;&nbsp;" . $categoria_label;
+            $arrReturn[count($arrReturn)] = array("id"=>$categoria_id, "name"=>$categoria_label);
+            if(count($categoria['arrChild']) != 0)
+            {
+                $arrReturn = addCategory($categoria['arrChild'], $arrReturn, ($lvl+1));
+            }
+        }
+        return $arrReturn;
+    }
+}
+
+if(!function_exists('tbl')) {
+
+    function tbl(array $data) {
+        return app('tablist')->init($data);
+    }
+}
+
+if(! function_exists('edit')) {
+    
+    function edit(array $data) {
+        return app('edit')->init($data);
+    }
+}
+
+if(!function_exists('getProvince')) {
+
+    function getProvince() {
+        return app('lt.province');
+    }
+}
+
+if(!function_exists('getPayment')) {
+    function getPayment() {
+        $return = [];
+        $return[] = ['id' => 1 ,  'name' => 'Contrassegno'];
+        $return[] = ['id' => 2 ,  'name' => 'RiBa 30gg data fatt.'];
+        $return[] = ['id' => 3 ,  'name' => 'Bonifico Anticipato'];
+        $return[] = ['id' => 4 ,  'name' => 'Carta di Credito'];
+        $return[] = ['id' => 5 ,  'name' => 'Contrassegno'];
+        $return[] = ['id' => 6,   'name' => 'Rim. Diretta 7gg data fatt.'];
+        $return[] = ['id' => 7,   'name' => 'Rim. Diretta 30gg data fatt.'];
+        $return[] = ['id' => 8,   'name' => 'Come convenuto'];
+
+        return $return;
+    }
+}
+
+if(!function_exists('getSaveList')) {
+    function getSaveList($data, $search, $array) {
+        $toSave = [];
+        foreach($array as $valor) {
+            if(is_array($valor)) {
+                list($key,$closure) = $valor;
+                $newKey = str_replace($search,'',$key);
+                if(isset($data[$key]))
+                    $toSave[$newKey] = $closure($data[$key]);
+            } else {
+                $newKey = str_replace($search,'',$valor);
+                if(isset($data[$valor]))
+                    $toSave[$newKey] = $data[$valor]; 
+            }
+        }
+        return $toSave;
+    }
+}

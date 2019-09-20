@@ -30,6 +30,8 @@ class LTFrameworkProvider extends ServiceProvider {
 
         $this->registerCommand();
 
+        $this->registerEditor();
+
     }
 
 
@@ -51,6 +53,13 @@ class LTFrameworkProvider extends ServiceProvider {
         $this->abstractRegister('Plugin');
 
         $this->abstractRegister('Template');
+    }
+
+    /**
+     * This function register all Editor Classes
+     */
+    protected function registerEditor() {
+        $this->registerAction($this->getEditorBoot());
     }
 
 
@@ -124,6 +133,15 @@ class LTFrameworkProvider extends ServiceProvider {
         return require __DIR__.'/config/commands.php';
     }
 
+
+    /**
+     * This function return an array of editor-boot
+     * @return mixed array
+     */
+    protected function getEditorBoot() {
+        return require __DIR__.'/config/editor-boot.php';
+    }
+    
     /**
      * This method do a binding to the Services|Commands
      * @param $services

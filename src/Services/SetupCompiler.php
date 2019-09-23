@@ -14,11 +14,11 @@ use File;
 class SetupCompiler {
 
     protected $plugins = [
-        "Hardel@Dashboard" => "1.0.0",
-        "Hardel@Settings" => "1.0.0",
-        "Hardel@Plugin" => "1.0.0",
-        "Hardel@Website" => "1.0.0",
-        "Hardel@File" => "1.0.0"
+        "Hardel@Dashboard" => "1.1.0",
+        "Hardel@Settings" => "1.1.0",
+        "Hardel@Plugin" => "1.1.0",
+        "Hardel@Website" => "1.1.0",
+        "Hardel@File" => "1.1.0"
     ];
 
     protected $node;

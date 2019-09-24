@@ -1,6 +1,6 @@
 # Release Notes
 
-## 1.0.0-beta1  (2019-09-20)
+## 1.0.0-beta3  (2019-09-24)
 
 - Added ViewEditor
 - Added ViewComponent

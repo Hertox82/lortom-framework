@@ -105,5 +105,12 @@ return [
         'closure'       => function($app) {
             return new \LTFramework\Services\Editor\Field\UploadFileField();
         }
+    ],
+    [
+        'method'        => 'bind',
+        'abstract'      => 'cdmirror',
+        'closure'       => function($app) {
+            return new \LTFramework\Services\Editor\Field\CodeMirrorField();
+        }
     ]
 ];

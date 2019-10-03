@@ -17,7 +17,7 @@ class SetupCompiler {
         "Hardel@Dashboard" => "1.2.0",
         "Hardel@Settings" => "1.2.0",
         "Hardel@Plugin" => "1.2.0",
-        "Hardel@Website" => "1.2.0",
+        "Hardel@Website" => "1.2.1",
         "Hardel@File" => "1.2.0"
     ];
 

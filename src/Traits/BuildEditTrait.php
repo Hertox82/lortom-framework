@@ -22,7 +22,7 @@ trait BuildEditTrait {
      */
     public function edit(Request $request, $id) {
         $key = get_called_class().'@edit';
-        $edit = RenderPipeline::renderByKey($key,$this->buildViewEdit($request,$id));
+        $edit = RenderPipeline::renderByKey($key,[$this->buildViewEdit($request,$id),$id]);
         return response()->json($edit->extract());
     }
 

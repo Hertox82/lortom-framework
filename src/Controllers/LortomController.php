@@ -11,6 +11,7 @@ namespace LTFramework\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use DB;
+use Illuminate\Http\RedirectResponse;
 use Plugins\Hardel\Website\Model\LortomPages;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Routing\Route as mRoute;
@@ -152,10 +153,14 @@ class LortomController extends BaseController
             abort(404);
         }
         else {
-            //Create Data for Page
-            list($view,$data) = $PageFound->renderData($variable);
+             //Create Data for Page
+             $response = $PageFound->renderData($variable);
+            if(is_array($response)) {
+                list($view,$data) = $response;
 
-            return view($view,$data);
+                return view($view,$data);
+            } else if($response instanceof RedirectResponse)
+            return $response;
         }
     }
 

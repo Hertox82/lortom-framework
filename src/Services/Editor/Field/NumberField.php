@@ -15,6 +15,7 @@ class NumberField extends AbstractField {
         'data',
         'isEdit',
         'step',
+        'initialized',
         'available'
     ];
 }

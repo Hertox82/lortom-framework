@@ -130,7 +130,7 @@ class LortomController extends BaseController
         foreach($Pages as  $page) {
             // convert urls like '/users/{uid}/posts/{:pid}' to regular expression
             $slug = str_replace('/','\/',$page->slug);
-            $pattern = "@^" . preg_replace('/\{(.*?)\??\}/', '([^\/\.]+)', $slug) . "$@D";
+            $pattern = "@^" . preg_replace('/\{(.*?)\??\}/', '([^\/]+)', $slug) . "$@D";
             $matches = Array();
             // check if the current request matches the expression
             if(preg_match($pattern, $urlSanitize, $matches)) {

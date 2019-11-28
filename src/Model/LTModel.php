@@ -136,15 +136,21 @@ abstract class LTModel extends Model {
     }
 
 
-    public static function getAllItems($listData, $listWhere = []) {
+    public static function getAllItems($listData, $listWhere = [],$orderBy = '') {
        
         $class = get_called_class();
         $items = [];
 
         if(count($listWhere) === 0)
-            $items = $class::all();
+            if(strlen($orderBy) === 0)
+                $items = $class::all();
+            else
+                $items = $class::orderBy($orderBy)->get();
         else
-            $items = $class::where($listWhere)->get();
+            if(strlen($orderBy) === 0)
+                $items = $class::where($listWhere)->get();
+            else
+                $items = $class::where($listWhere)->orderBy($orderBy)->get();
 
         $response = [];
 

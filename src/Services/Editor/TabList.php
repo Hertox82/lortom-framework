@@ -11,9 +11,11 @@ class TabList {
     protected $actions = [];
     protected $tabs = [];
     protected $where = [];
+    protected $orderBy = '';
 
     public function init(array $data = []) {
         $this->class = $data['class'];
+        $this->orderBy = (isset($data['orderBy'])) ? $data['orderBy'] : '';
         
         return $this;
     }
@@ -22,7 +24,11 @@ class TabList {
         $params = [
             'field' => '', 
             'label' => '',
-            'type'  => 'text' //text, id, checkbox, date, preset 
+            'type'  => 'text', //text, id, checkbox, date, preset
+            'join'  => [
+                'relationship' => 'function_to_call',
+                'field'        => 'fieldToShow'
+             ]
         ];
 
         $this->columns[] = $data;
@@ -69,7 +75,7 @@ class TabList {
         return [
             'tableHeader' => $listTableHeader,
             'actions'     => $this->actions,
-            'data'        => $this->class::getAllItems($this->columns,$this->where),
+            'data'        => $this->class::getAllItems($this->columns,$this->where,$this->orderBy),
             'tabs'        => $this->tabs
         ];
     }

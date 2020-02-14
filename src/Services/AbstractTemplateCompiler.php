@@ -9,7 +9,6 @@ namespace LTFramework\Services;
 
 
 use LTFramework\Services\Traits\ActionCommand;
-use File;
 
 abstract class AbstractTemplateCompiler extends BaseTemplate
 {

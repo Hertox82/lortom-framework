@@ -112,5 +112,12 @@ return [
         'closure'       => function($app) {
             return new \LTFramework\Services\Editor\Field\CodeMirrorField();
         }
+    ],
+    [
+        'method'        => 'bind',
+        'abstract'      => 'media',
+        'closure'       => function($app) {
+            return new \LTFramework\Services\Editor\Field\MediaField();
+        }
     ]
 ];

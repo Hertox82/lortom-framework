@@ -1,6 +1,6 @@
 <?php
 /**
- * @author hernan ariel de luca
+ * @author YourName
  */
 return [
     'exportPath' => [

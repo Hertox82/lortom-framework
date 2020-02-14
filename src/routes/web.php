@@ -20,4 +20,4 @@ Route::group(['prefix' => '/backend', 'middleware' => 'lortom.auth'], function()
 Route::any('{catchAll}',[
     'as'    => 'catchAll',
     'uses'  => 'LortomController@catchAll'
-])->where('catchAll','^(?!api|backend).*$');
+])->where('catchAll','^(?!api|backend|sitemap).*$');

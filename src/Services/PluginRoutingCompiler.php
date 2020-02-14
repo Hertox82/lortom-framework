@@ -43,18 +43,18 @@ class PluginRoutingCompiler
 
     private function compile()
     {
-        $stub = "import {Routes, RouterModule} from \"@angular/router\"; \n";
-        $stub.= "import {ModuleWithProviders} from \"@angular/core\"; \n";
-        $stub.= "import {LoginComponent,LogoutComponent} from \"./backend-module/login\"; \n";
-        $stub.= "import {UserModelComponent} from \"./backend-module/user-module\"; \n";
-        $stub.= "import {NotFoundComponent} from \"./backend-module/notfoundpage\"; \n";
+        $stub = "import {Routes, RouterModule} from '@angular/router'; \n";
+        $stub.= "import {ModuleWithProviders} from '@angular/core'; \n";
+        $stub.= "import {LoginComponent,LogoutComponent} from './backend-module/login'; \n";
+        $stub.= "import {UserModelComponent} from './backend-module/user-module'; \n";
+        $stub.= "import {NotFoundComponent} from './backend-module/notfoundpage'; \n";
 
 
         // Qui va ciclato l'array e va inserito dentro il contenuto di data
 
         $stub.= "\n";
         $stub.= "const routes: Routes = [ \n";
-        $stub.= "       {path: 'backend', redirectTo:'backend/dashboard', pathMatch: 'full'}, \n";
+        $stub.= "       {path: 'backend', redirectTo: 'backend/dashboard', pathMatch: 'full'}, \n";
         $stub.= "              {path: 'backend/login', component: LoginComponent}, \n";
         $stub.= "              {path: 'backend/logout', component: LogoutComponent}, \n";
         $stub.= "              {path: 'backend/profile/edit', component : UserModelComponent }, \n";
@@ -68,7 +68,7 @@ class PluginRoutingCompiler
             $moduleName = str_replace('.',' ',$moduleName);
             $moduleName = str_replace(' ','',ucwords($moduleName));
 
-            $stub.= "       {path: 'backend{$plug['routingPath']}' , loadChildren:'../plugins/{$plug['vendor']}/{$plug['PluginName']}/{$plug['moduleName']}#{$moduleName}'}";
+            $stub.= "       {path: 'backend{$plug['routingPath']}' , loadChildren: '../plugins/{$plug['vendor']}/{$plug['PluginName']}/{$plug['moduleName']}#{$moduleName}'}";
 
             if($i < ($length-1)){
                 $stub.= ",";

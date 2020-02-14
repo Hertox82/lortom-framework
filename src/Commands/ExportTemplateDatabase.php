@@ -30,7 +30,7 @@ class ExportTemplateDatabase extends Command {
 
         $migrations = $databasePath.'/migrations';
 
-        $this->line('prova delle prove');
+        
         $this->comment('finding folder to export migrations and seeds');
         if(!$this->checkIfExist($databasePath,$migrations)) {
             File::makeDirectory($databasePath,0777,true);

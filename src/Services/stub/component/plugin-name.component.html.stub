@@ -1,12 +1,23 @@
 <div class="content-box">
     <div class="content-header">
         <h1>Title</h1>
-        <ol class="breadcrumb">
-            <li><a>Level 1</a></li>
-            <li class="active"><a>Level 2 active</a></li>
-        </ol>
+        <breadcrumbs></breadcrumbs>
     </div>
     <div class="content">
-        Here, the Content!
+        <router-outlet></router-outlet>
+        <div class="portlet" *ngIf="isRoot === true">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-database"></i>
+                    <span>Overviews</span>
+                </div>
+                <div class="actions">
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="tiles">
+                </div>
+            </div>
+        </div>
     </div>
 </div>

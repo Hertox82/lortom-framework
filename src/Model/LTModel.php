@@ -33,6 +33,19 @@ abstract class LTModel extends Model {
 
     }
 
+    public static function gIdBack($field, $value) {
+        $className = get_called_class();
+        $Obj = new $className();
+        $list = $Obj->gVal($field);
+        foreach($list as $item) {
+            if($item['name'] === $value) {
+                return $item['id'];
+            }
+        }
+
+        return -1;
+    }
+
     public static function gItemBack($field, $id) {
         $className = get_called_class();
         $Obj = new $className();
@@ -163,12 +176,13 @@ abstract class LTModel extends Model {
 
     public function getSerializedItem($data) {
         $response = [];
-        
+        // pr($data,1);
         $response[] = ['label' => '', 'value' => '', 'type' => 'checkbox'];
         foreach($data as $item) {
             $field = $item['field'];
             $label = $item['label'];
             $type = $item['type'];
+            $join = @$item['join'];
             $class = isset($item['class']) ? $item['class'] : null;
 
             if(is_array($field)) {
@@ -185,15 +199,37 @@ abstract class LTModel extends Model {
                 $response[] = ['label' => $label, 'value' => $value, 'type' => $type];
             }
             else {
+                $value = null;
                 if($type === 'date') {
-                    $value = date('d-m-Y',strtotime($this->$field));
+                    if($join) {
+                        $rel = $join['relationship'];
+                        $fld = $join['field'];
+                        $value = date('d-m-Y',strtotime($this->$rel()->$fld));
+                    }else {
+                        $value = date('d-m-Y',strtotime($this->$field));
+                    }
                     $response[] = ['label' => $label, 'value' => $value , 'type' => 'text'];
                 }
                 else if($type === 'preset') {
-                    $response[] = ['label' => $label, 'value' => self::sanitize(self::gValBack($field, $this->{$field})) , 'type' => 'text'];
+                    if($join) {
+                        $rel = $join['relationship'];
+                        $fld = $join['field'];
+                        $Obj = $this->$rel();
+                        $response[] = ['label' => $label, 'value' => self::sanitize($Obj::gValBack($fld, $Obj->{$fld})) , 'type' => 'text'];
+                    } else {
+                        $response[] = ['label' => $label, 'value' => self::sanitize(self::gValBack($field, $this->{$field})) , 'type' => 'text'];
+                    }
                 }
-                else
-                $response[] = ['label' => $label, 'value' => $this->$field , 'type' => $type];
+                else {
+                    if($join) {
+                        $rel = $join['relationship'];
+                        $fld = $join['field'];
+                        $response[] = ['label' => $label, 'value' => @$this->{$rel}()->$fld , 'type' => $type];
+                    } else {
+                        $response[] = ['label' => $label, 'value' => $this->$field , 'type' => $type];
+                    }
+                }
+                
             }
         }
 

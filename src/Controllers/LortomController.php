@@ -11,10 +11,11 @@ namespace LTFramework\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use DB;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 use Plugins\Hardel\Website\Model\LortomPages;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Routing\Route as mRoute;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class LortomController extends BaseController
 {
@@ -159,8 +160,10 @@ class LortomController extends BaseController
                 list($view,$data) = $response;
 
                 return view($view,$data);
-            } else if($response instanceof RedirectResponse)
-            return $response;
+            } else if($response instanceof RedirectResponse){
+                return $response;
+            } else if($response instanceof Response)
+                return $response;
         }
     }
 

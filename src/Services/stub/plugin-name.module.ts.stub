@@ -1,10 +1,24 @@
 import { NgModule } from '@angular/core';
-import {#Name#Component} from "./component/#pluginname#.component";
-import {routing} from "./#pluginname#.routing";
+import {#Name#Component} from './component/#pluginname#.component';
+import {routing} from './#pluginname#.routing';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { BreadCrumbModule } from '@Lortom/app/backend-module';
+import { uiComponent } from '@Lortom/app/build-editor/ui.component';
+
 
 
 @NgModule({
-    imports: [routing],
+    imports: [
+        routing,
+        CommonModule,
+        FormsModule,
+        BreadCrumbModule,
+        BuildEditorModule,
+    ],
+        entryComponents: [
+            uiComponent
+        ],
     declarations: [
         #Name#Component
     ],

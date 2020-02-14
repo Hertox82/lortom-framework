@@ -114,6 +114,7 @@ class BuildEdit {
                 'isEdit'  => false,
                 'db_callable' => '',
                 'db_table' => '',  // []
+                'default'   => ''
 
             ],
             'type' => ''

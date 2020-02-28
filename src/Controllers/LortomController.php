@@ -22,7 +22,6 @@ class LortomController extends BaseController
 
     protected $functionName;
 
-
     /**
      * This function get List of everything
      * @param $options

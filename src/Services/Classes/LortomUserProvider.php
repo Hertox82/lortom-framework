@@ -8,13 +8,16 @@
 namespace LTFramework\Services\Classes;
 
 use LTFramework\LortomUser;
+use LTFramework\LortomRole;
 use Hash;
-use Session;
+use Illuminate\Support\Facades\Cookie;
 
 class LortomUserProvider
 {
 
     protected $username;
+
+    protected $userId;
 
     protected $password;
 
@@ -22,22 +25,40 @@ class LortomUserProvider
 
     protected $payload;
 
-    public function validateLogin(array $input)
+    public function validateLogin(array $input, $isBackend = true)
     {
         array_walk_recursive($input,[$this->getNameClass(),'saveInput']);
 
-        return $this->isValidate();
+        return $this->isValidate($isBackend);
     }
 
-    protected function isValidate()
+    protected function isValidate($isBackend)
     {
         $query = $this->queryUser();
-        //pr($query);
+        
         if(is_null($query))
             return false;
         else{
             if(Hash::check($this->password,$query->password))
             {
+                if($isBackend) {
+                    // check the role
+                    $rolesEnv = env('LT_BACKEND_ROLES','');
+                    if(strlen($rolesEnv) == 0) {
+                        $this->user = $query;
+                        return true;
+                    } else {
+                        $roles = explode(',',$rolesEnv);
+                        $getRoles = $query->getRoles()->pluck('name')->toArray();
+                        foreach($getRoles as $role) {
+                            if(in_array($role,$roles)) {
+                                $this->user = $query;
+                                return true;
+                            }
+                        }
+                            return false;
+                    }
+                }
                 $this->user = $query;
                 return true;
             }
@@ -48,29 +69,65 @@ class LortomUserProvider
         }
     }
 
+    protected function getRole($role) {
+        $LTRole = LortomRole::where('name',$role)->first();
+        return $LTRole;
+    }
+
     public function getToken()
     {
-        $token = $this->retrieveTokenByCookies();
-
-        if(!$token)
-        {
-            return null;
-        }
-
-
-        return $token;
+        return $this->retrieveTokenByCookies();
     }
 
     protected function retrieveTokenByCookies()
     {
-        return isset($_COOKIE['l_t']) ? $_COOKIE['l_t'] : null;
+        $tokenSplitted= [];
+        $tokenSplitted[] = isset($_COOKIE['l_at']) ? $_COOKIE['l_at'] : null;
+        $tokenSplitted[] = isset($_COOKIE['l_bt']) ? $_COOKIE['l_bt'] : null;
+       
+        $token = implode('.',$tokenSplitted);
+        
+        return (strlen($token) > 1) ? $token : null;
     }
 
-    public function setToken()
-    {
+    public function makeCookies($splittedToken) {
+        list($lat,$lbt) = $splittedToken;
+        $config = config('session');
+        return [
+            Cookie::make('l_at', $lat, 10, $config['path'], $config['domain'], $config['secure'],false,true,'Lax'),
+            Cookie::make('l_bt', $lbt, 10, $config['path'], $config['domain'], $config['secure'],true,true,'Lax')
+        ];
+    }
 
+    public function setToken($id = 0)
+    {
+        if(! $this->user) {
+            if($id) {
+                $this->userId = $id;
+                $this->user = $this->queryById();
+            }
+            
+        }
+        $roles = $this->user->getRoles();
+
+        $permissions = [];
+
+        foreach($roles as $role) {
+            if ($role instanceof LortomRole) {
+                $perm = $role->getPermissions()->toArray();
+                $permissions = array_merge($permissions,
+                array_map(function($item){
+                    return (object) [
+                        'id'    => $item['id'],
+                        'name'  => $item['name']
+                    ];
+            },$perm));
+            }
+        }
         $payload = [
-            'sub'     => $this->user->email,
+            'sub'     => base64_encode($this->user->id),
+            'name'    => $this->user->name,
+            'perm'    => $permissions,
             'exp'     => 10,
             'iss'     => $_ENV['APP_NAME'],
             'created' => date('Y-m-d H:i:s')
@@ -81,16 +138,20 @@ class LortomUserProvider
         return $token;
     }
 
-    public function refreshToken()
+    public function refreshToken($id)
     {
-        //$this->user = LortomUser::where([['email',$this->payload->sub]])->first();
+        return $this->refreshUser()->setToken($id);
+    }
 
-        return $this->setToken();
+    public function splitToken($token) {
+        $JWTPieces = explode(".", $token);
+        $lbt = array_pop($JWTPieces);
+
+        return [implode('.',$JWTPieces),$lbt];
     }
 
     public function validateToken($token)
     {
-        //$token = decrypt($token);
 
         try {
             $payload = JWT::decode($token, 'lortom_tomlor');
@@ -101,13 +162,13 @@ class LortomUserProvider
 
         $this->payload = $payload;
 
-        $this->username = $this->payload->sub;
+        $this->userId =  base64_decode($this->payload->sub);
 
-        $this->user = $this->queryUser();
+        $this->user = $this->queryById();
 
         $nowTime = strtotime(date('Y-m-d H:i:s'));
         $created = strtotime($payload->created);
-        $expiration = $created + $payload->exp;
+        $expiration = $created + ($payload->exp * 60);
 
         $check = $expiration - $nowTime;
 
@@ -123,9 +184,21 @@ class LortomUserProvider
         }
     }
 
+    private function refreshUser() {
+        $this->user = $this->queryById();
+        return $this;
+    }
+
     private function queryUser()
     {
         $query = LortomUser::where([['email',$this->username]])->first();
+
+        return $query;
+    }
+
+    private function queryById()
+    {
+        $query = LortomUser::where([['id',$this->userId]])->first();
 
         return $query;
     }

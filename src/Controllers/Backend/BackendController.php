@@ -37,7 +37,7 @@ class BackendController extends BaseController
      */
     public function populate(Request $request)
     {
-        $User = $request->get('User');
+        $User = $request->get('user');
 
         $listaPlugin = config('plugins');
 
@@ -101,9 +101,10 @@ class BackendController extends BaseController
         $UserObj = ['username' => $User->email, 'name' => $User->name, 'permissions' => $permission];
         $response = ['token' => $token, 'user' => $UserObj];
 
-       $config = config('session');
+        list($cookie1,$cookie2) = LtAuth::makeCookies(LtAuth::splitToken($token));
 
-        return response()->json($response)->withCookie(Cookie::make('l_t',$token,10,$config['path'],$config['domain'],$config['secure'],false,false,'Lax'));
+        return response()->json($response)->withCookie($cookie1)
+                                          ->withCookie($cookie2);
     }
 
     private function sanitizePermission(LortomPermission $perm)
@@ -116,17 +117,15 @@ class BackendController extends BaseController
 
     public function requestLogout(Request $request)
     {
-        $config = config('session');
-        unset($_COOKIE['l_t']);
-        return response()->json(['message' => 'logged Out!'])->withCookie(Cookie::make('l_t',null,-1,$config['path'],$config['domain'],$config['secure'],false,false,'Lax'));
+        return response()->json(['message' => 'logged Out!'])->withCookie(cookie('l_at','',-1))->withCookie(cookie('l_bt','',-1));
     }
 
     public function requestEditMyProfile(Request $request)
     {
 
-        $User = $request->get('User');
+        $User = $request->get('user');
 
-        $input = $request->all();
+        $input = $request->only(['name','password']);
 
 
         if(isset($input['password']))
@@ -140,9 +139,15 @@ class BackendController extends BaseController
 
         $User->save();
 
-        $user = ['name' => $User->name, 'username' => $User->email];
+        $token = $this->auth->refreshToken($User->id);
+        list($cookie1,$cookie2) = LtAuth::makeCookies(LtAuth::splitToken($token));
 
-        return response()->json(['message' => 'Well done! All is up to date', 'user' => $user]);
+        $user = ['name' => $User->name, 'username' => base64_encode($User->id)];
+
+        return response()->json(['message' => 'Well done! All is up to date', 'user' => $user])
+        ->withCookie(cookie('l_at','',-1))->withCookie(cookie('l_bt','',-1))
+        ->withCookie($cookie1)
+        ->withCookie($cookie2);
     }
 
     static function sort($a,$b)

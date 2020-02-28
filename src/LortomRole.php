@@ -35,4 +35,11 @@ class LortomRole extends Model
         return $return;
     }
 
+    public function getPermissions() {
+        if(empty($this->permissions)) {
+            $this->permissions();
+        }
+        return $this->permissions;
+    }
+
 }

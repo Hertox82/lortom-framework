@@ -39,14 +39,22 @@ class LortomAuth
         return $this->userProvider->validateToken($token);
     }
 
-    public function refreshToken()
+    public function refreshToken($id=0)
     {
-        return $this->userProvider->refreshToken();
+        return $this->userProvider->refreshToken($id);
     }
 
     public function getUser()
     {
         return $this->userProvider->getUser();
+    }
+
+    public function splitToken($token) {
+        return $this->userProvider->splitToken($token);
+    }
+
+    public function makeCookies($splittedToken) {
+        return $this->userProvider->makeCookies($splittedToken);
     }
 
 }

@@ -25,6 +25,9 @@ class LortomUser extends Model
 
     public function hasRole($role)
     {
+        if(empty($this->roles))
+            $this->roles();
+        
         foreach ($this->roles as $r)
         {
             if($r instanceof LortomRole)

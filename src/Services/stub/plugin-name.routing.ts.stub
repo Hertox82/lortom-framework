@@ -8,4 +8,4 @@ const routes : Routes = [
     {path:'', component: #Name#Component}
 ];
 
-export const routing : ModuleWithProviders = RouterModule.forChild(routes);
+export const routing: ModuleWithProviders = RouterModule.forChild(routes);

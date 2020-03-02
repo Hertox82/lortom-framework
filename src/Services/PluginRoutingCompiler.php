@@ -48,6 +48,7 @@ class PluginRoutingCompiler
         $stub.= "import {LoginComponent,LogoutComponent} from './backend-module/login'; \n";
         $stub.= "import {UserModelComponent} from './backend-module/user-module'; \n";
         $stub.= "import {NotFoundComponent} from './backend-module/notfoundpage'; \n";
+        $stub.="import { AuthGuardService } from './auth-module/auth.guard'; \n";
 
 
         // Qui va ciclato l'array e va inserito dentro il contenuto di data
@@ -67,9 +68,13 @@ class PluginRoutingCompiler
             $moduleName = $plug['moduleName'];
             $moduleName = str_replace('.',' ',$moduleName);
             $moduleName = str_replace(' ','',ucwords($moduleName));
+            if($plug['routingPath'] == '/dashboard') {
+                $stub.= "       {path: 'backend{$plug['routingPath']}' , loadChildren: '../plugins/{$plug['vendor']}/{$plug['PluginName']}/{$plug['moduleName']}#{$moduleName}'}";
+            } else {
+                $stub.= "       {path: 'backend{$plug['routingPath']}' , loadChildren: '../plugins/{$plug['vendor']}/{$plug['PluginName']}/{$plug['moduleName']}#{$moduleName}', canLoad:[AuthGuardService],\n";
+                $stub.="\t \t data:{'permission': '{$plug['permission']}'}}";
 
-            $stub.= "       {path: 'backend{$plug['routingPath']}' , loadChildren: '../plugins/{$plug['vendor']}/{$plug['PluginName']}/{$plug['moduleName']}#{$moduleName}'}";
-
+            }
             if($i < ($length-1)){
                 $stub.= ",";
             }

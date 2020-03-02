@@ -4,7 +4,10 @@ import {routing} from './#pluginname#.routing';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BreadCrumbModule } from '@Lortom/app/backend-module';
+import { BuildEditorModule } from '@Lortom/app/build-editor/buildEditor.module';
 import { uiComponent } from '@Lortom/app/build-editor/ui.component';
+import { PaginationService } from '@Lortom/services/pagination.service';
+
 
 
 
@@ -22,6 +25,9 @@ import { uiComponent } from '@Lortom/app/build-editor/ui.component';
     declarations: [
         #Name#Component
     ],
+    providers: [
+        PaginationService
+    ]
 })
 
 export class #Name#Module {}

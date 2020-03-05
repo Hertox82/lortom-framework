@@ -14,8 +14,7 @@ use LTFramework\LortomPermission;
 use LTFramework\LortomUser;
 use LTFramework\Services\Classes\LortomAuth;
 use Illuminate\Http\Request;
-use Cookie;
-use Session;
+use LTFramework\Services\Facades\LtAuth;
 
 class BackendController extends BaseController
 {

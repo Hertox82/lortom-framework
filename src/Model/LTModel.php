@@ -4,6 +4,7 @@ namespace LTFramework\Model;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use Schema;
 
 abstract class LTModel extends Model {
 
@@ -31,6 +32,18 @@ abstract class LTModel extends Model {
             }
         }
 
+    }
+
+    public function prepareSave() {
+        if(multisite()->hasModelWriteable(get_called_class())) {
+            if(!Schema::hasColumn($this->getTable(),'site')) {
+                throw new LTHttpException(response()->json(['error' => "{$this->getTable()} not have site column"],404));
+
+            }
+            $this->site = multisite()->getIdSite();
+        }
+
+        $this->save();
     }
 
     public static function gIdBack($field, $value) {

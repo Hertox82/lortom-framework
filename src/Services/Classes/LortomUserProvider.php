@@ -49,7 +49,14 @@ class LortomUserProvider
                         return true;
                     } else {
                         $roles = explode(',',$rolesEnv);
-                        $getRoles = $query->getRoles()->pluck('name')->toArray();
+                        $checkedRoles = $query->getRoles();
+                        if(multisite()->hasModelReadable(LTFramework\LortomRole::class)) {
+                            if(! Schema::hasColumn('lt_roles','site')) {
+                                return false;
+                            }
+                            $checkedRoles = $checkedRoles->where('site',multisite()->getIdSite());
+                        }
+                        $getRoles = $checkedRoles->pluck('name')->toArray();
                         foreach($getRoles as $role) {
                             if(in_array($role,$roles)) {
                                 $this->user = $query;

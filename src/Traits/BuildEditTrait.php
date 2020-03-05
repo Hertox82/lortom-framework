@@ -3,6 +3,7 @@
 namespace LTFramework\Traits;
 
 use Illuminate\Http\Request;
+use LTFramework\Exceptions\LTHttpException;
 use LTFramework\Services\Editor\Pipeline\RenderPipeline;
 
 trait BuildEditTrait {
@@ -22,7 +23,11 @@ trait BuildEditTrait {
      */
     public function edit(Request $request, $id) {
         $key = get_called_class().'@edit';
-        list($edit,$id) = RenderPipeline::renderByKey($key,[$this->buildViewEdit($request,$id),$id]);
+        try {
+            list($edit,$id) = RenderPipeline::renderByKey($key,[$this->buildViewEdit($request,$id),$id]);
+        } catch(LTHttpException $e) {
+            return $e->getResponse();
+        }
         return response()->json($edit->extract());
     }
 
@@ -32,7 +37,11 @@ trait BuildEditTrait {
      */
     public function index(Request $request) {
         $key = get_called_class().'@index';
+        try {
         $tab = RenderPipeline::renderByKey($key,$this->buildViewList($request));
+        } catch (LTHttpException $e) {
+            return $e->getResponse();
+        }
         return response()->json($tab->extract()); 
     }
 

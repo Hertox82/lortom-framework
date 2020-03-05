@@ -47,9 +47,6 @@ class LortomAuthentication
                     return $user;
                 });
                 return $response = $next($request);
-                //list($cookie1,$cookie2) = LtAuth::makeCookies(LtAuth::splitToken($token));
-                //return $response->withCookie($cookie1)
-                //                ->withCookie($cookie2);
             }
             else if($check === false)
             {

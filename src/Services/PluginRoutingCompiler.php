@@ -43,23 +43,23 @@ class PluginRoutingCompiler
 
     private function compile()
     {
-        $stub = "import {Routes, RouterModule} from '@angular/router'; \n";
-        $stub.= "import {ModuleWithProviders} from '@angular/core'; \n";
-        $stub.= "import {LoginComponent,LogoutComponent} from './backend-module/login'; \n";
-        $stub.= "import {UserModelComponent} from './backend-module/user-module'; \n";
-        $stub.= "import {NotFoundComponent} from './backend-module/notfoundpage'; \n";
-        $stub.="import { AuthGuardService } from './auth-module/auth.guard'; \n";
+        $stub = "import {Routes, RouterModule} from '@angular/router';\n";
+        $stub.= "import {ModuleWithProviders} from '@angular/core';\n";
+        $stub.= "import {LoginComponent,LogoutComponent} from './backend-module/login';\n";
+        $stub.= "import {UserModelComponent} from './backend-module/user-module';\n";
+        $stub.= "import {NotFoundComponent} from './backend-module/notfoundpage';\n";
+        $stub.="import { AuthGuardService } from './auth-module/auth.guard';\n";
 
 
         // Qui va ciclato l'array e va inserito dentro il contenuto di data
 
         $stub.= "\n";
-        $stub.= "const routes: Routes = [ \n";
-        $stub.= "       {path: 'backend', redirectTo: 'backend/dashboard', pathMatch: 'full'}, \n";
-        $stub.= "              {path: 'backend/login', component: LoginComponent}, \n";
-        $stub.= "              {path: 'backend/logout', component: LogoutComponent}, \n";
-        $stub.= "              {path: 'backend/profile/edit', component : UserModelComponent }, \n";
-        $stub.= "              {path: 'backend/not-found', component: NotFoundComponent}, \n";
+        $stub.= "const routes: Routes = [\n";
+        $stub.= "       {path: 'backend', redirectTo: 'backend/dashboard', pathMatch: 'full'},\n";
+        $stub.= "              {path: 'backend/login', component: LoginComponent},\n";
+        $stub.= "              {path: 'backend/logout', component: LogoutComponent},\n";
+        $stub.= "              {path: 'backend/profile/edit', component : UserModelComponent },\n";
+        $stub.= "              {path: 'backend/not-found', component: NotFoundComponent},\n";
 
         $i= 0;
         $length = count($this->data);
@@ -71,8 +71,8 @@ class PluginRoutingCompiler
             if($plug['routingPath'] == '/dashboard') {
                 $stub.= "       {path: 'backend{$plug['routingPath']}' , loadChildren: '../plugins/{$plug['vendor']}/{$plug['PluginName']}/{$plug['moduleName']}#{$moduleName}'}";
             } else {
-                $stub.= "       {path: 'backend{$plug['routingPath']}' , loadChildren: '../plugins/{$plug['vendor']}/{$plug['PluginName']}/{$plug['moduleName']}#{$moduleName}', canLoad:[AuthGuardService],\n";
-                $stub.="\t \t data:{'permission': '{$plug['permission']}'}}";
+                $stub.= "       {path: 'backend{$plug['routingPath']}' , loadChildren: '../plugins/{$plug['vendor']}/{$plug['PluginName']}/{$plug['moduleName']}#{$moduleName}', canLoad: [AuthGuardService],\n";
+                $stub.="\t\tdata: {'permission': '{$plug['permission']}'}}";
 
             }
             if($i < ($length-1)){
@@ -82,7 +82,7 @@ class PluginRoutingCompiler
             $i++;
         }
 
-        $stub.= "]; \n";
+        $stub.= "];\n";
 
         $stub.= "export const routing: ModuleWithProviders = RouterModule.forRoot(routes);";
 

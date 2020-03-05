@@ -19,7 +19,6 @@ if(! function_exists('pr')){
     }
 }
 
-
 if(! function_exists('array_map_collection')) {
 
     function array_map_collection(Closure $callback, $list)
@@ -146,6 +145,13 @@ if(! function_exists('edit')) {
     
     function edit(array $data) {
         return app('edit')->init($data);
+    }
+}
+
+if(! function_exists('multisite')) {
+    
+    function multisite() {
+        return app('lt-multisitemanager');
     }
 }
 

@@ -2,11 +2,13 @@
 
 namespace LTFramework\Services\Editor;
 
+use LTFramework\Exceptions\LTHttpException;
+use Schema;
 
 class BuildEdit {
 
     protected $class = null;
-    protected $objId = null;
+    protected $objId = 0;
     protected $Obj = null;
     protected $input = [];
     protected $type = null;
@@ -27,13 +29,22 @@ class BuildEdit {
 
         $class = $this->class;
         if ($class != null) {
-            if(strlen($this->objId) != 0) {
+            if($this->objId != 0) {
                 $this->Obj = $class::find($this->objId);
+                if(multisite()->hasModelReadable($class)) {
+                    if(!Schema::hasColumn($this->Obj->getTable(),'site')) {
+                        // $this->Obj = null;
+                        throw new LTHttpException(response()->json(['error' => "{$this->Obj->getTable()} not have site column"],404));
+                    } else {
+                        if ($this->Obj->site !== multisite()->getIdSite()) {
+                            throw new LTHttpException(response()->json(['error' => 'The Owner of this Object is Other Site'],404));
+                        }
+                    }
+                }
                 if($this->Obj) {
                     $this->type = 'update';
                 } else {
-                    $this->Obj = new $class;
-                    $this->type = 'store';
+                    throw new LTHttpException(response()->json(['error' => 'file not found'],404));
                 }
             } else {
                 $this->Obj = new $class;

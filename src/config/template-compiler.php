@@ -11,21 +11,21 @@ return [
         'method'      => 'singleton',
         'abstract'    => 'lt-templ.plugin.compiler',
         'closure'     => function($app){
-            return new \LTFramework\Services\TemplatePlugCompiler($app['plugin.config.compiler']);
+            return new \LTFramework\Template\Compiler\TemplatePlugCompiler($app['plugin.config.compiler']);
         }
     ],
     [
         'method'      => 'singleton',
         'abstract'    => 'lt-templ.create.compiler',
         'closure'     => function($app){
-            return new \LTFramework\Services\TemplateCreateCompiler();
+            return new \LTFramework\Template\Compiler\TemplateCreateCompiler();
         }
     ],
     [
         'method'      => 'singleton',
         'abstract'    => 'lt-templ.delete.compiler',
         'closure'     => function($app){
-            return new \LTFramework\Services\TemplateDeleteCompiler();
+            return new \LTFramework\Template\Compiler\TemplateDeleteCompiler();
         }
     ],
 ];

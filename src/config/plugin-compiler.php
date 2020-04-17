@@ -8,52 +8,43 @@
 
 return [
     [
+        'method'    => 'bind',
+        'abstract'  => '\LTFramework\Contracts\Compiler\ConfigCompiler',
+        'closure'   => '\LTFramework\Plugins\Compiler\PluginsConfigCompiler'
+    ], 
+    [
         'method'      => 'bind',
         'abstract'    => 'plugin.config.compiler',
         'closure'     => function($app){
-            return new \LTFramework\Services\PluginsConfigCompiler();
+            return new \LTFramework\Plugins\Compiler\PluginsConfigCompiler();
         }
     ],
     [
         'method'      => 'singleton',
         'abstract'    => 'lt-plugin.routing.compiler',
         'closure'     => function($app){
-            return new \LTFramework\Services\PluginRoutingCompiler();
+            return new \LTFramework\Plugins\Compiler\PluginRoutingCompiler();
         }
     ],
     [
         'method'      => 'singleton',
         'abstract'    => 'lt-plugin.create.compiler',
         'closure'     => function($app){
-            return new \LTFramework\Services\PluginCreateCompiler($app['plugin.config.compiler']);
+            return new \LTFramework\Plugins\Compiler\PluginCreateCompiler($app['plugin.config.compiler']);
         }
     ],
     [
         'method'      => 'singleton',
         'abstract'    => 'lt-plugin.delete.compiler',
         'closure'     => function($app){
-            return new \LTFramework\Services\PluginDeleteCompiler($app['plugin.config.compiler']);
+            return new \LTFramework\Plugins\Compiler\PluginDeleteCompiler($app['plugin.config.compiler']);
         }
     ],
     [
         'method'      => 'singleton',
         'abstract'    => 'lt-plugin.update.compiler',
         'closure'     => function($app){
-            return new \LTFramework\Services\PluginUpdateCompiler($app['plugin.config.compiler']);
-        }
-    ],
-    [
-        'method'      => 'singleton',
-        'abstract'    => 'lt.user.provider',
-        'closure'     => function($app){
-            return new \LTFramework\Services\Classes\LortomUserProvider();
-        }
-    ],
-    [
-        'method'      => 'singleton',
-        'abstract'    => 'ltAuth',
-        'closure'     => function($app){
-            return new \LTFramework\Services\Classes\LortomAuth($this->app['lt.user.provider']);
+            return new \LTFramework\Plugins\Compiler\PluginUpdateCompiler($app['plugin.config.compiler']);
         }
     ],
     [

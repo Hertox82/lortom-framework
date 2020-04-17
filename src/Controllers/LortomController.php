@@ -16,11 +16,19 @@ use Plugins\Hardel\Website\Model\LortomPages;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Routing\Route as mRoute;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Schema;
 
 class LortomController extends BaseController
 {
 
     protected $functionName;
+
+    public function __construct($middleware = [])
+    {
+        foreach($middleware as $m) {
+            $this->middleware($m);
+        }
+    }
 
     /**
      * This function get List of everything
@@ -108,7 +116,9 @@ class LortomController extends BaseController
         return [$responseKey => $function()->sanitizeItem($Class,$name)];
     }
 
-
+    /**
+     * This function catchAllRequest
+     */
     public function catchAll(Request $request) {
 
         //Catch all Routes and try to get Request URI
@@ -119,8 +129,22 @@ class LortomController extends BaseController
 
         $urlSanitize = $urlSanitize[0];
 
+        $Pages = null;
         //Call DB in order to get all Pages set into CMS
-        $Pages = LortomPages::all();
+        if(multisite()->hasModelReadable(LortomPages::class)) {
+            if(!Schema::hasColumn('lt_pages','site')) {
+                abort(404,'Pagina Non trovata');
+            }
+
+            $Pages = LortomPages::where('site',multisite()->getIdSite())->get();
+
+        } else {
+            if(Schema::hasColumn('lt_pages','site')) {
+                $Pages = LortomPages::where('site',null)->get();
+            } else {
+                $Pages = LortomPages::all();
+            }
+        }
 
         $PageFound = null;
 

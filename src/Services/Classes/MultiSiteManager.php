@@ -7,7 +7,7 @@ use File;
 class MultiSiteManager {
 
     /**
-     * @var array 
+     * @var Illuminate\Support\Collection 
      */
     protected $settings;
 
@@ -31,9 +31,10 @@ class MultiSiteManager {
 
         if(!File::exists($sitesPath)) 
         {   
-            $this->settings = [];
+            $this->settings = collect([]);
         } else {
-            $this->settings = require $sitesPath;
+            $collect = require $sitesPath;
+            $this->settings = collect($collect);
         }
     }
 
@@ -42,7 +43,7 @@ class MultiSiteManager {
      * @return boolean
      */
     public function isMultisite() {
-        return empty($this->settings);
+        return $this->settings->isEmpty();
     }
 
     /**
@@ -50,7 +51,7 @@ class MultiSiteManager {
      * @return boolean
      */
     public function getIdSite() {
-        return isset($this->settings['id_site']) ? $this->settings['id_site'] : '';
+        return $this->settings->get('id_site') ? $this->settings->get('id_site') : '';//isset($this->settings['id_site']) ? $this->settings['id_site'] : '';
     }
 
     /**
@@ -78,9 +79,9 @@ class MultiSiteManager {
      * @return boolean
      */
     protected function hasModelAction($model, $action) {
-        if(!isset($this->settings[$action]))
+        if(! $this->settings->has($action))
             return false;
-
-        return in_array($model,$this->settings[$action]);
+            
+        return collect($this->settings->get($action))->contains($model);
     }
 }

@@ -2,7 +2,7 @@
 
 ## 1.0.0-rc2 (2020-03-06)
 
-- Added Multi site managment (with shared Database)
+- Added Multi site management (with shared Database)
 - minor fix
 
 ## 1.0.0-rc1 (2020-03-02)

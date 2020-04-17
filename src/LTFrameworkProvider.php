@@ -8,155 +8,88 @@
 namespace LTFramework;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Route;
+use LTFramework\Interfaces\EncapsInterface;
+use LTFramework\Auth\UrlExtension;
+use LTFramework\Contracts\Notifications\EmailVerification;
+use LTFramework\Traits\CommandsProvider;
+use LTFramework\Traits\EditorProvider;
+use LTFramework\Traits\MacroProvider;
+use LTFramework\Traits\RoutingProvider;
+use LTFramework\Traits\ServicesProvider as TraitServiceProvider;
 
 class LTFrameworkProvider extends ServiceProvider {
 
+    use TraitServiceProvider, RoutingProvider,
+    CommandsProvider, MacroProvider, EditorProvider;
 
     protected $listOfCommands = [];
 
+    protected $toRegister = [
+        'Services',
+        'Command',
+        'Editor',
+        'UrlMacro',
+        'RequestMacro',
+        'Other',
+    ];
+
     protected $namespace = 'LTFramework\Controllers';
 
+    /**
+     * This function boot route made by LTFramework
+     * 
+     * @return void
+     */
     public function boot() {
 
         $this->bootRouting();
 
     }
 
-
+    /**
+     * This function register All Service from LTFramework
+     * 
+     * @return void
+     */
     public function register() {
 
-        $this->registerServices();
-
-        $this->registerCommand();
-
-        $this->registerEditor();
-
-    }
-
-
-    /**
-     * This function register Console Command
-     */
-    protected function registerCommand() {
-
-        $this->registerAction($this->getCommands(),true);
-
-        $this->commands($this->listOfCommands);
-    }
-
-    /**
-     * This function register all services from LTFramework
-     */
-    protected function registerServices() {
-
-        $this->abstractRegister('Plugin');
-
-        $this->abstractRegister('Template');
-
-        $this->registerAction($this->getServicesBoot());
-    }
-
-    /**
-     * This function register all Editor Classes
-     */
-    protected function registerEditor() {
-        $this->registerAction($this->getEditorBoot());
-    }
-
-
-    /**
-     * This metho booting routes for web and api
-     */
-    protected function bootRouting() {
-
-        if(!$this->app->routesAreCached()) {
-
-            $this->mapWeb();
-
-            $this->mapApi();
+        foreach($this->toRegister as $fn) {
+            $this->{"register{$fn}"}();
         }
     }
 
     /**
-     * this method map web.php
+     * This function provide to register other Services
+     * 
+     * @return void
      */
-    protected function mapWeb() {
+    public function registerOther() 
+    {
+        $this->app->singleton('lt.urlext', function ($app) {
+            $urlext = new UrlExtension();
+            // set key resolver
+            $urlext->setKeyResolver(function(){
+                return $this->app->make('config')->get('app.key'); 
+            });
 
-        Route::middleware('web')
-            ->namespace($this->namespace)
-            ->group(__DIR__.'/routes/web.php');
+            return $urlext;
+        });
+
+        $this->app->bind('email.verification', function($app){
+            return $app->make(EmailVerification::class);
+        });
+        
+        $this->app->singleton('lt.encaps', function($app){
+            return $app->make(EncapsInterface::class);
+        });
     }
 
-    /**
-     * this method map api.php
-     */
-    protected function mapApi() {
-
-        Route::prefix('api')
-            ->middleware('api')
-            ->namespace($this->namespace)
-            ->group(__DIR__.'/routes/api.php');
-    }
-
-    /**
-     * This method register a type of Plugin|Template
-     * @param $type string
-     */
-    protected function abstractRegister($type) {
-        $function = "get{$type}Compiler";
-
-        $data = $this->$function();
-
-        $this->registerAction($data);
-    }
-
-    /**
-     * This function return an array of template-compiler
-     * @return mixed array
-     */
-    protected function getTemplateCompiler() {
-        return require __DIR__.'/config/template-compiler.php';
-    }
-
-    /**
-     * This function return an array of plugin-compiler
-     * @return mixed array
-     */
-    protected function getPluginCompiler() {
-        return require __DIR__.'/config/plugin-compiler.php';
-    }
-
-    /**
-     * This function return an array commands
-     * @return mixed array
-     */
-    protected function getCommands() {
-        return require __DIR__.'/config/commands.php';
-    }
-
-
-    /**
-     * This function return an array of editor-boot
-     * @return mixed array
-     */
-    protected function getEditorBoot() {
-        return require __DIR__.'/config/editor-boot.php';
-    }
-    
-    /**
-     * This function return an array of services
-     * @return mixed array
-     */
-    protected function getServicesBoot() {
-        return require __DIR__.'/config/services.php';
-    }
     /**
      * This method do a binding to the Services|Commands
      * @param $services
      * @param bool $commands
      */
-    protected function registerAction($services,$commands=false) {
+    protected function registerAction($services, $commands=false) {
 
         foreach ($services as $service) {
             $method = $service['method'];

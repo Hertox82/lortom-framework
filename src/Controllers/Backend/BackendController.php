@@ -12,14 +12,16 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use LTFramework\LortomPermission;
 use LTFramework\LortomUser;
-use LTFramework\Services\Classes\LortomAuth;
+use LTFramework\Auth\LortomAuth;
 use Illuminate\Http\Request;
-use LTFramework\Services\Facades\LtAuth;
 
 class BackendController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    /**
+     * @var \LTFramework\Auth\LortomAuth $auth
+     */
     protected $auth;
 
     public function __construct(LortomAuth $auth)
@@ -100,7 +102,7 @@ class BackendController extends BaseController
         $UserObj = ['username' => $User->email, 'name' => $User->name, 'permissions' => $permission];
         $response = ['token' => $token, 'user' => $UserObj];
 
-        list($cookie1,$cookie2) = LtAuth::makeCookies(LtAuth::splitToken($token));
+        list($cookie1,$cookie2) = $this->auth->makeCookies($this->auth->splitToken($token));
 
         return response()->json($response)->withCookie($cookie1)
                                           ->withCookie($cookie2);
@@ -139,7 +141,8 @@ class BackendController extends BaseController
         $User->save();
 
         $token = $this->auth->refreshToken($User->id);
-        list($cookie1,$cookie2) = LtAuth::makeCookies(LtAuth::splitToken($token));
+        
+        list($cookie1,$cookie2) = $this->auth->makeCookies($this->auth->splitToken($token));
 
         $user = ['name' => $User->name, 'username' => base64_encode($User->id)];
 

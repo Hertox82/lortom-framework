@@ -10,21 +10,33 @@ namespace LTFramework;
 
 use LTFramework\Model\LTModel as Model;
 use DB;
+use Illuminate\Notifications\Notifiable;
 use LTFramework\Exceptions\LTHttpException;
+use LTFramework\Auth\Traits\UserMustVerifyEmail;
+use LTFramework\Contracts\UserMustVerifyEmail as ContractsUserMustVerifyEmail;
 use Schema;
 
-class LortomUser extends Model
+class LortomUser extends Model implements ContractsUserMustVerifyEmail
 {
+    use UserMustVerifyEmail, Notifiable;
+
     protected $table = 'lt_user';
 
 
     protected $roles = [];
+
+    protected $fillable = ['name','email','password'];
 
     /**
      * @var array
      */
     protected $permissions;
 
+    /**
+     * This function check if User has a specific Role
+     * @param string $role
+     * @return boolean
+     */
     public function hasRole($role)
     {
         if(empty($this->roles))
@@ -44,6 +56,10 @@ class LortomUser extends Model
         return false;
     }
 
+    /**
+     * This function check if a User has roles
+     * @return boolean
+     */
     public function hasRoles()
     {
         if(empty($this->roles))
@@ -52,7 +68,11 @@ class LortomUser extends Model
         return (count($this->roles) > 0);
     }
 
-
+    /**
+     * This function check if an User has a specific Permission
+     * @param string $permission
+     * @return boolean
+     */
     public function hasPermission($permission)
     {
         if(empty ($this->permissions))
@@ -109,7 +129,22 @@ class LortomUser extends Model
 
     public function roles()
     {
-        $this->roles =  $this->btmRoles()->get();
+        $roles =  $this->btmRoles()->get();
+
+        if(multisite()->hasModelReadable(LortomRole::class)) {
+            if(! Schema::hasColumn('lt_roles','site')) {
+                throw new LTHttpException(
+                    response()->json(['error' => "lt_components not have site column"],404)
+                );
+            }
+            $roles = $roles->where('site',multisite()->getIdSite());
+        } else {
+            if(Schema::hasColumn('lt_roles','site')) {
+                $roles = $roles->where('site', null);
+            }
+        }
+
+        $this->roles = $roles;
 
         return $this;
     }
@@ -132,35 +167,29 @@ class LortomUser extends Model
         $User = LortomUser::find($id);
         if(!$User) 
             return [];
-            $response = [];
-            $listOfRoles = $User->getRoles();
-            if(multisite()->hasModelReadable(LortomRole::class)) {
-                if(! Schema::hasColumn('lt_roles','site')) {
-                    throw new LTHttpException(
-                        response()->json(['error' => "lt_components not have site column"],404)
-                    );
-                }
-                $listOfRoles = $listOfRoles->where('site',multisite()->getIdSite());
+        
+        $response = [];
+        $listOfRoles = $User->getRoles();
+
+        // pr($listOfRoles,1);
+
+        $idList = $listOfRoles->pluck('id')->toArray();
+        
+        $listOfId = DB::table('lt_users_roles')->where('idUser',$id)->whereIn('idRole',$idList)->get()->all();
+
+        $response = array_map(function($item, $panem){
+            if($item->id == $panem->idRole) {
+
+                    return [
+                        'idUserRole'        => $panem->id,
+                        'idRole'  => $item->id,
+                        'name'          => $item->name
+                    ];
+            } else {
+                return [];
             }
-            $listOfId = DB::table('lt_users_roles')->where('idUser',$id)->get()->all();
-
-            $response = array_map(function($item, $panem){
-                if($item->id == $panem->idRole) {
-                    if(multisite()->hasModelReadable(LortomRole::class)) {
-                        if(!Schema::hasColumn('lt_roles','site')) {
-
-                        }
-                    }
-                     return [
-                            'idUserRole'        => $panem->id,
-                            'idRole'  => $item->id,
-                            'name'          => $item->name
-                        ];
-                } else {
-                    return [];
-                }
-            },$listOfRoles->all(),$listOfId);
-            return array_filter($response);
+        },$listOfRoles->all(),$listOfId);
+        return array_filter($response);
     }
 
     public static function convertToSearch($input) {
@@ -168,26 +197,24 @@ class LortomUser extends Model
         // inizializzo la query per la ricerca dei ruoli
         $listOfRoles = LortomRole::where('name','LIKE', '%'.$input['search'].'%');
         // controllo che non sia un multisito con database condiviso
-        if(multisite()->hasModelReadable(LTFramework\LortomRole::class)) {
+        if(multisite()->hasModelReadable(LortomRole::class)) {
             if(! Schema::hasColumn('lt_roles','site')) {
                 throw new LTHttpException(response()
                 ->json(['error' => "lt_components not have site column"],404));
             } 
             //completo la query
             $listOfRoles = $listOfRoles->where('site',multisite()->getIdSite());
+        } else {
+            if(Schema::hasColumn('lt_roles','site')) {
+                $listOfRoles = $listOfRoles->where('site', null);
+            }
         }
         // prendo i risultati
         $listOfRoles = $listOfRoles->get()->all();
+        //pr($listOfRoles,1);
         if($id !== 0) {
             $User = self::find($id);
             $rolesIn = $User->getRoles();
-            if(multisite()->hasModelReadable(LTFramework\LortomRole::class)) {
-                if(! Schema::hasColumn('lt_roles','site')) {
-                    throw new LTHttpException(response()
-                    ->json(['error' => "lt_components not have site column"],404));
-                } 
-                $rolesIn = $rolesIn->where('site',multisite()->getIdSite());
-            }
             $rolesIn = $rolesIn->all();
 
             foreach($rolesIn as $role) {

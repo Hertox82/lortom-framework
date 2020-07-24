@@ -8,7 +8,7 @@
 namespace LTFramework\Template\Compiler;
 
 
-use App\Exceptions\VNException;
+use LTFramework\Exceptions\VNException;
 use LTFramework\Contracts\Compiler\ConfigCompiler;
 
 class TemplatePlugCompiler extends AbstractTemplateCompiler {

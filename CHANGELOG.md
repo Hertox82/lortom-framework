@@ -1,5 +1,11 @@
 # Release Notes
 
+## 1.0.0  (2020-07-24)
+
+- Deployed version stable 1.0.0
+- Minor Fix
+- Added new Exception
+
 ## 1.0.0-rc2 (2020-03-06)
 
 - Added Multi site management (with shared Database)

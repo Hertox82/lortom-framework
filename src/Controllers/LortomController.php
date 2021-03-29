@@ -121,6 +121,14 @@ class LortomController extends BaseController
      */
     public function catchAll(Request $request) {
 
+        //$preTotal = microtime(true) - LARAVEL_START;
+
+        //pr("sono nel catchAll: {$preTotal}");
+        //define('LORTOM_START',microtime(true));
+        if(config('routeCached')) {
+           return $this->processRouteCached($request);
+        }
+    
         //Catch all Routes and try to get Request URI
         $url = $request->getRequestUri();
 
@@ -151,6 +159,7 @@ class LortomController extends BaseController
         $variable = [];
 
         //Iterate over List in order to Match the request
+        
         foreach($Pages as  $page) {
             // convert urls like '/users/{uid}/posts/{:pid}' to regular expression
             $slug = str_replace('/','\/',$page->slug);
@@ -181,8 +190,70 @@ class LortomController extends BaseController
              $response = $PageFound->renderData($variable);
             if(is_array($response)) {
                 list($view,$data) = $response;
+                $view = view($view, $data);
+                $responsable = new Response($view);
+                if($responsable->hasMacro('setPage')) {
+                    $responsable->setPage($PageFound);
+                }
+                return $responsable;//view($view,$data);
+            } else if($response instanceof RedirectResponse){
+                return $response;
+            } else if($response instanceof Response)
+                return $response;
+        }
+    }
 
-                return view($view,$data);
+    public function processRouteCached(Request $request) {
+        //Catch all Routes and try to get Request URI
+        $url = $request->getRequestUri();
+
+        //try to sanitize the URI removing the querystring
+        $urlSanitize = explode('?',$url);
+
+        $urlSanitize = $urlSanitize[0];
+
+        $pages = config('routeCached');
+
+        $PageFound = null;
+
+        $variable = [];
+
+        //Iterate over List in order to Match the request
+        foreach($pages as  $page) {
+            // convert urls like '/users/{uid}/posts/{:pid}' to regular expression
+            $slug = str_replace('/','\/',$page['slug']);
+            $pattern = "@^" . preg_replace('/\{(.*?)\??\}/', '([^\/]+)', $slug) . "$@D";
+            $matches = Array();
+            // check if the current request matches the expression
+            if(preg_match($pattern, $urlSanitize, $matches)) {
+                // remove the first match
+                array_shift($matches);
+                $variable = $matches;
+                // call the callback with the matched positions as params
+               if(preg_match_all('/\{(.*?)\??\}/',$slug,$secondMatches))
+               {
+                   array_shift($secondMatches);
+
+               }
+                $PageFound = $page;
+            }
+        }
+
+        if(is_null($PageFound))
+        {
+            abort(404);
+        }
+        else {
+             //Create Data for Page
+             $response = LortomPages::find($PageFound['id'])->renderCachedData($PageFound, $variable);
+            if(is_array($response)) {
+                list($view,$data) = $response;
+                $view = view($view, $data);
+                $responsable = new Response($view);
+                if($responsable->hasMacro('setPage')) {
+                    $responsable->setPage($PageFound);
+                }
+                return $responsable;
             } else if($response instanceof RedirectResponse){
                 return $response;
             } else if($response instanceof Response)
@@ -198,6 +269,7 @@ class LortomController extends BaseController
     public function listApi(Request $request)
     {
         $routes = array_values(array_filter(collect(Route::getRoutes())->map(function ($route) {
+            
                 $item = $this->getRouteInformation($route);
                 if(substr($item['uri'],0,strlen('api/')) == 'api/')
                 {
@@ -210,11 +282,13 @@ class LortomController extends BaseController
                         $function = $Info[1];
                         $reflector = new \ReflectionClass($class);
 
-                        $doc = $reflector->getMethod($function)->getDocComment();
-                        if (preg_match('/@Api\(([^\/\.]+)\)/', $doc, $matches)) {
-                            array_shift($matches);
-                            $object = str_replace('*', '', $matches[0]);
-                            $item['object'] = json_decode($object, true);
+                        if($reflector->hasMethod($function)) {
+                            $doc = $reflector->getMethod($function)->getDocComment();
+                            if (preg_match('/@Api\(([^\/\.]+)\)/', $doc, $matches)) {
+                                array_shift($matches);
+                                $object = str_replace('*', '', $matches[0]);
+                                $item['object'] = json_decode($object, true);
+                            }
                         }
                     }
                     unset($item['action']);

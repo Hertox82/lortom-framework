@@ -193,4 +193,3 @@ class BuildEdit {
         return $this->blocks;
     }
 }
-

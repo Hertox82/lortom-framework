@@ -7,7 +7,6 @@
 
 namespace LTFramework\Template\Compiler;
 
-
 use LTFramework\Template\BaseTemplate;
 use LTFramework\Traits\ActionCommand;
 

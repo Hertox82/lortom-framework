@@ -58,7 +58,7 @@ class PluginRoutingCompiler
         $stub.= "       {path: 'backend', redirectTo: 'backend/dashboard', pathMatch: 'full'},\n";
         $stub.= "              {path: 'backend/login', component: LoginComponent},\n";
         $stub.= "              {path: 'backend/logout', component: LogoutComponent},\n";
-        $stub.= "              {path: 'backend/profile/edit', component : UserModelComponent },\n";
+        $stub.= "              {path: 'backend/profile/edit', component: UserModelComponent },\n";
         $stub.= "              {path: 'backend/not-found', component: NotFoundComponent},\n";
 
         $i= 0;

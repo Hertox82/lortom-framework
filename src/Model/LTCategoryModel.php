@@ -13,6 +13,10 @@ class LTCategoryModel extends LTModel {
         if($field == 'idFather')
         {
             $return = $this->getCatTree();
+        } elseif ($field == 'state') {
+            
+            $return[] = [ 'id' => 1, 'name' => 'attivo'];
+            $return[] = [ 'id' => 2, 'name' => 'disattivo'];
         }
 
         return $return;

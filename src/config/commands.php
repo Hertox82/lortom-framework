@@ -104,5 +104,19 @@ return [
         'closure'     => function($app){
             return new \LTFramework\Commands\DeleteGitignore();
         }
+    ],
+    [
+        'method'      => 'bind',
+        'abstract'    => 'lt-route::cache',
+        'closure'     => function($app){
+            return new \LTFramework\Commands\CacheRoute();
+        }
+    ],
+    [
+        'method'      => 'bind',
+        'abstract'    => 'lt-route::refresh-cache',
+        'closure'     => function($app){
+            return new \LTFramework\Commands\RefreshCacheRoute();
+        }
     ]
 ];

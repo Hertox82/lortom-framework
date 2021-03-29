@@ -72,8 +72,7 @@ trait BuildEditTrait {
     }
 
     public function delete(Request $request, $class, $key = 'id') {
-        $input = $request->all();
-       
+        $input = $request->except('user');
         $this->deleteItem($input, $class, $key);
         $tab = $this->buildViewList($request);
         return response()->json($tab->extract());

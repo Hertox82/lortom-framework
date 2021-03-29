@@ -245,6 +245,15 @@ abstract class LTModel extends Model {
                     } else {
                         $response[] = ['label' => $label, 'value' => self::sanitize(self::gValBack($field, $this->{$field})) , 'type' => 'text'];
                     }
+                } else if($type === 'img') {
+                    if($join) {
+                        $rel = $join['relationship'];
+                        $fld = $join['field'];
+                        $Obj = $this->$rel();
+                        $response[] = ['label' => $label, 'value' => $Obj->getImageSource(), 'type' => 'img'];
+                    } else {
+                        $response[] = ['label' => $label, 'value' => $this->getImageSource(), 'type' => 'img'];
+                    }
                 }
                 else {
                     if($join) {
@@ -264,5 +273,9 @@ abstract class LTModel extends Model {
 
     public static function sanitize($data) {
         return str_replace('&nbsp;','',$data);
+    }
+
+    public function getImageSource() {
+        return '';
     }
 }

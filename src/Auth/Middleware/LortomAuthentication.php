@@ -22,7 +22,6 @@ class LortomAuthentication
         if($currentPath === 'backend/login'){
 
             $response = $next($request);
-            // $response->headers->set('X-FRAME-OPTIONS','DENY');
             return $response;
         }
         // Verificare prima se il token è in sessione
@@ -31,7 +30,7 @@ class LortomAuthentication
 
         if(strlen($token) == 0)
         {
-            return redirect('backend/login')
+            return redirect('/')
             ->withCookie(cookie('l_at','',-1))
             ->withCookie(cookie('l_bt','',-1));
             
@@ -41,6 +40,13 @@ class LortomAuthentication
             //autentica il token
             if($check = LtAuth::validateToken($token))
             {
+                
+                if(! LtAuth::isBackendUser()) {
+                    return redirect('/')
+                            ->withCookie(cookie('l_at','',-1))
+                            ->withCookie(cookie('l_bt','',-1));
+                }
+                
                 $user = LtAuth::getUser();
                 $request->merge(['user' => $user]);
                 $request->setUserResolver(function() use ($user){
@@ -67,7 +73,7 @@ class LortomAuthentication
                 unset($_COOKIE['l_at']);
                 unset($_COOKIE['l_bt']);
                 
-                return response()->json(['error' => 'not Authorized'],401) //redirect('backend/login')
+                return response()->json(['error' => 'not Authorized'],401)
                 ->withCookie(cookie('l_at','',-1))
                 ->withCookie(cookie('l_bt','',-1));
             }

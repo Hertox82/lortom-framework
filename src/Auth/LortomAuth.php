@@ -57,4 +57,8 @@ class LortomAuth
         return $this->userProvider->makeCookies($splittedToken);
     }
 
+    public function isBackendUser(){
+        return $this->userProvider->validateBackendUser($this->userProvider->getUser());
+    }
+
 }

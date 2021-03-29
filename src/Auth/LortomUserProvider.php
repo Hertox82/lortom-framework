@@ -64,7 +64,7 @@ class LortomUserProvider
      * @param \LTFramework\LortomUser $user
      * @return boolean
      */
-    protected function validateBackendUser(LortomUser $user) {
+    public function validateBackendUser(LortomUser $user) {
         // check the role
         $rolesEnv = env('LT_BACKEND_ROLES','');
         if(strlen($rolesEnv) == 0) {
@@ -105,6 +105,20 @@ class LortomUserProvider
                 return true;
             }
         } else {
+
+            $role = 'Frontend';
+            $checkedRoles = $user->getRoles();
+            if(multisite()->hasModelReadable(LTFramework\LortomRole::class)) {
+                if(! Schema::hasColumn('lt_roles','site')) {
+                    return false;
+                }
+                $checkedRoles = $checkedRoles->where('site',multisite()->getIdSite());
+            }
+            $getRoles = $checkedRoles->pluck('name')->toArray();
+            if(! in_array($role,$getRoles)) {
+                return false;
+            }
+
             $this->user = $user;
             return true;
         }
@@ -135,8 +149,8 @@ class LortomUserProvider
         list($lat,$lbt) = $splittedToken;
         $config = config('session');
         return [
-            Cookie::make('l_at', $lat, 10, $config['path'], $config['domain'], $config['secure'],false,true,'Lax'),
-            Cookie::make('l_bt', $lbt, 10, $config['path'], $config['domain'], $config['secure'],true,true,'Lax')
+            Cookie::make('l_at', $lat, env('COOKIE_LIFETIME',120), $config['path'], $config['domain'], $config['secure'],false,true,'Lax'),
+            Cookie::make('l_bt', $lbt, env('COOKIE_LIFETIME',120), $config['path'], $config['domain'], $config['secure'],true,true,'Lax')
         ];
     }
 
@@ -169,7 +183,7 @@ class LortomUserProvider
             'sub'     => base64_encode($this->user->id),
             'name'    => $this->user->name,
             'perm'    => $permissions,
-            'exp'     => 10,
+            'exp'     => 15,
             'iss'     => $_ENV['APP_NAME'],
             'created' => date('Y-m-d H:i:s')
         ];

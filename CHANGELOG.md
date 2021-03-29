@@ -1,5 +1,11 @@
 # Release Notes
 
+## 1.1.0 (2021-03-29)
+
+- Added new Event (StateEvent)
+- Added new System for Cache Route
+- Minor fix
+
 ## 1.0.0  (2020-07-24)
 
 - Deployed version stable 1.0.0

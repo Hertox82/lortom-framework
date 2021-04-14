@@ -1,9 +1,9 @@
 <?php
 
 
-namespace LTFramework\Services\Editor\Field;
+namespace LTFramework\Editor\Field;
 
-use LTFramework\Services\Editor\AbstractField;
+use LTFramework\Editor\AbstractField;
 
 
 class TextField extends AbstractField {

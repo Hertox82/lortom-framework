@@ -17,7 +17,7 @@ class TabList {
 
     public function init(array $data = []) {
         $this->class = $data['class'];
-        $this->orderBy = (isset($data['orderBy'])) ? $data['orderBy'] : '';
+        $this->orderBy = (isset($data['orderBy'])) ? $data['orderBy'] : [];
         if(multisite()->hasModelReadable($this->class)) {
             $class = $this->class;
             $obj = new $class();

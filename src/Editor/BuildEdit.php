@@ -190,8 +190,7 @@ class BuildEdit {
     }
 
     public function extract() {
-
         return array_merge(['id' => $this->objId],['blocks' => $this->blocks]);
-    
+        // return $this->blocks;
     }
 }

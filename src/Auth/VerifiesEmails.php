@@ -43,7 +43,7 @@ trait VerifiesEmails
     {
         if(! $request->user())
         {
-            $e = new EmailVerificationExceptions('Non Autorizzato');
+            $e = new EmailVerificationExceptions('Utente non autenticato, per favore prima di ripetere la procedura controlla di esserti autenticato!');
             if(method_exists($this,'filteringData'))
                 $e->prepareData($this->filteringData($request));
 

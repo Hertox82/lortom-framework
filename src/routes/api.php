@@ -9,7 +9,7 @@
 Route::get('/',[
     'as'    => 'listApi',
     'uses'  => 'LortomController@listApi'
-]);
+])->middleware('lortom.auth');
 
 Route::get('/populate-slidebar',[
     'as'    => 'populateSlidebar',

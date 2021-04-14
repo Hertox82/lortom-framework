@@ -1,6 +1,11 @@
 # Release Notes
 
-## 1.1.0 (2021-03-29)
+## 1.1.0 (2021-04-14)
+
+- Added Support Version to Laravel 5.6.*
+
+
+## 1.0.1 (2021-03-29)
 
 - Added new Event (StateEvent)
 - Added new System for Cache Route

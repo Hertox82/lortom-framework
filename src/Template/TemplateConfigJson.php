@@ -5,7 +5,7 @@
  * Time: 12:24
  */
 
-namespace LTFramework\Services;
+namespace LTFramework\Template;
 
 use File;
 

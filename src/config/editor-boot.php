@@ -3,119 +3,119 @@
 return [
     [
         'method'        => 'bind',
-        'abstract'      => 'edit',
+        'abstract'      => 'lt.edit',
         'closure'       => function($app) {
             return new \LTFramework\Editor\BuildEdit();
         }
     ],
     [
         'method'        => 'bind',
-        'abstract'      => 'tablist',
+        'abstract'      => 'lt.tablist',
         'closure'       => function($app) {
             return new \LTFramework\Editor\TabList();
         }
     ],
     [
         'method'        => 'bind',
-        'abstract'      => 'text',
+        'abstract'      => 'lt.text',
         'closure'       => function($app) {
             return new \LTFramework\Editor\Field\TextField();
         }
     ],
     [
         'method'        => 'bind',
-        'abstract'      => 'hidden',
+        'abstract'      => 'lt.hidden',
         'closure'       => function($app) {
             return new \LTFramework\Editor\Field\HiddenField();
         }
     ],
     [
         'method'        => 'bind',
-        'abstract'      => 'email',
+        'abstract'      => 'lt.email',
         'closure'       => function($app) {
             return new \LTFramework\Editor\Field\EmailField();
         }
     ],
     [
         'method'        => 'bind',
-        'abstract'      => 'select',
+        'abstract'      => 'lt.select',
         'closure'       => function($app) {
             return new \LTFramework\Editor\Field\SelectField();
         }
     ],
     [
         'method'        => 'bind',
-        'abstract'      => 'tinymce',
+        'abstract'      => 'lt.tinymce',
         'closure'       => function($app) {
             return new \LTFramework\Editor\Field\TinyMceField();
         }
     ],
     [
         'method'        => 'bind',
-        'abstract'      => 'chbxList',
+        'abstract'      => 'lt.chbxList',
         'closure'       => function($app) {
             return new \LTFramework\Editor\Field\CheckboxListField();
         }
     ],
     [
         'method'        => 'bind',
-        'abstract'      => 'number',
+        'abstract'      => 'lt.number',
         'closure'       => function($app) {
             return new \LTFramework\Editor\Field\NumberField();
         }
     ],
     [
         'method'        => 'bind',
-        'abstract'      => 'textarea',
+        'abstract'      => 'lt.textarea',
         'closure'       => function($app) {
             return new \LTFramework\Editor\Field\TextareaField();
         }
     ],
     [
         'method'        => 'bind',
-        'abstract'      => 'file',
+        'abstract'      => 'lt.file',
         'closure'       => function($app) {
             return new \LTFramework\Editor\Field\FileField();
         }
     ],
     [
         'method'        => 'bind',
-        'abstract'      => 'tblfield',
+        'abstract'      => 'lt.tblfield',
         'closure'       => function($app) {
             return new \LTFramework\Editor\Field\TableField();
         }
     ],
     [
         'method'        => 'bind',
-        'abstract'      => 'modal',
+        'abstract'      => 'lt.modal',
         'closure'       => function($app) {
             return new \LTFramework\Editor\Field\ModalField();
         }
     ],
     [
         'method'        => 'bind',
-        'abstract'      => 'date',
+        'abstract'      => 'lt.date',
         'closure'       => function($app) {
             return new \LTFramework\Editor\Field\DateField();
         }
     ],
     [
         'method'        => 'bind',
-        'abstract'      => 'uplfile',
+        'abstract'      => 'lt.uplfile',
         'closure'       => function($app) {
             return new \LTFramework\Editor\Field\UploadFileField();
         }
     ],
     [
         'method'        => 'bind',
-        'abstract'      => 'cdmirror',
+        'abstract'      => 'lt.cdmirror',
         'closure'       => function($app) {
             return new \LTFramework\Editor\Field\CodeMirrorField();
         }
     ],
     [
         'method'        => 'bind',
-        'abstract'      => 'media',
+        'abstract'      => 'lt.media',
         'closure'       => function($app) {
             return new \LTFramework\Editor\Field\MediaField();
         }

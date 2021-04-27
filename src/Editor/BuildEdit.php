@@ -69,7 +69,7 @@ class BuildEdit {
             if(!isset($params['db_table'])) {
                 $params['db_table'] = $this->Obj->getTable();
             }
-            return $this->addField(app($abstract)->init($params));
+            return $this->addField(app("lt.{$abstract}")->init($params));
         }
         elseif( $type == 'act') {
             return $this->addAction($abstract, $params);

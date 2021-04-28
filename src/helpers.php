@@ -137,14 +137,14 @@ if(!function_exists("addCategory"))
 if(!function_exists('tbl')) {
 
     function tbl(array $data) {
-        return app('tablist')->init($data);
+        return app('lt.tablist')->init($data);
     }
 }
 
 if(! function_exists('edit')) {
     
     function edit(array $data) {
-        return app('edit')->init($data);
+        return app('lt.edit')->init($data);
     }
 }
 

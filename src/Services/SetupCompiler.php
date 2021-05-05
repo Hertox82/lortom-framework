@@ -16,8 +16,8 @@ class SetupCompiler {
     protected $plugins = [
         "Hardel@Dashboard" => "1.2.3",
         "Hardel@Settings" => "1.2.4",
-        "Hardel@Plugin" => "1.2.3",
-        "Hardel@Website" => "1.3.1",
+        "Hardel@Plugin" => "1.3.0",
+        "Hardel@Website" => "1.4.0",
         "Hardel@File" => "1.3.0"
     ];
 

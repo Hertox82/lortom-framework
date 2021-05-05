@@ -1,5 +1,14 @@
 # Release Notes
 
+## 1.3.x (2021-05-05)
+
+- Addded Support Angular 8 (breaking changes)
+
+## 1.2.x (2021-04)
+
+- Added Support Version to Laravel ^5.5 (until 5.8)
+- Added Support to Angular 7
+
 ## 1.1.0 (2021-04-14)
 
 - Added Support Version to Laravel 5.6.*

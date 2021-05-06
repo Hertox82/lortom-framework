@@ -17,13 +17,9 @@
           "LTFramework\\":"src/"
       }
     },
-
     "require": {
         "illuminate/database":"^6.20"
     },
-
-    "minimum-stability": "stable",
-
     "prefer-stable": true,
 
     "extra": {

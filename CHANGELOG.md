@@ -1,5 +1,10 @@
 # Release Notes
 
+## 1.4.x (2021-05-06)
+
+- Added Laravel ^6.20
+- Removed Laravel 5.5 until 5.8
+
 ## 1.3.x (2021-05-05)
 
 - Addded Support Angular 8 (breaking changes)

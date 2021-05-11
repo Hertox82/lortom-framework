@@ -14,10 +14,10 @@ use File;
 class SetupCompiler {
 
     protected $plugins = [
-        "Hardel@Dashboard" => "1.2.3",
+        "Hardel@Dashboard" => "1.2.4",
         "Hardel@Settings" => "1.2.4",
         "Hardel@Plugin" => "1.3.0",
-        "Hardel@Website" => "1.4.0",
+        "Hardel@Website" => "1.4.1",
         "Hardel@File" => "1.3.0"
     ];
 

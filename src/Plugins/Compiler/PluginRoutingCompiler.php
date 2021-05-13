@@ -69,10 +69,11 @@ class PluginRoutingCompiler
             $moduleName = str_replace('.',' ',$moduleName);
             $moduleName = str_replace(' ','',ucwords($moduleName));
             if($plug['routingPath'] == '/dashboard') {
-                $stub.= "       {path: 'backend{$plug['routingPath']}' , loadChildren: '../plugins/{$plug['vendor']}/{$plug['PluginName']}/{$plug['moduleName']}#{$moduleName}'}";
+                $stub.= "       {path: 'backend{$plug['routingPath']}' , loadChildren: () => import('../plugins/{$plug['vendor']}/{$plug['PluginName']}/{$plug['moduleName']}')\n";
+                $stub.= "\t\t   .then(m => m.{$moduleName})}\n";
             } else {
-                $stub.= "       {path: 'backend{$plug['routingPath']}' , loadChildren: '../plugins/{$plug['vendor']}/{$plug['PluginName']}/{$plug['moduleName']}#{$moduleName}', canLoad: [AuthGuardService],\n";
-                $stub.="\t\tdata: {'permission': '{$plug['permission']}'}}";
+                $stub.= "       {path: 'backend{$plug['routingPath']}' , loadChildren: () => import('../plugins/{$plug['vendor']}/{$plug['PluginName']}/{$plug['moduleName']}')\n";
+                $stub.= "\t\t   .then(m => m.{$moduleName}), canLoad: [AuthGuardService], data: {'permission': '{$plug['permission']}'}}";
 
             }
             if($i < ($length-1)){

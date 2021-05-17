@@ -1,5 +1,10 @@
 # Release Notes
 
+## 1.5.x (2021-05-10)
+
+- Added Laravel 7
+- Added Angular 9-10
+
 ## 1.4.x (2021-05-06)
 
 - Added Laravel ^6.20

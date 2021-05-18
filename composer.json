@@ -18,7 +18,7 @@
       }
     },
     "require": {
-        "illuminate/database":"^7.29"
+        "illuminate/database":"^8.40"
     },
     "prefer-stable": true,
     "minimum-stability": "dev",
